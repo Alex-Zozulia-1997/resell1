@@ -3,58 +3,88 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-export default function PurchaseCard(info: any) {
+import { Check, Zap, ArrowRight } from 'lucide-react';
+
+interface PurchaseCardProps {
+  price: number;
+  data: number;
+}
+
+export default function PurchaseCard({ price, data }: PurchaseCardProps) {
   return (
-    <Card className="w-full m- p-2  rounded-xl h-auto bg-gradient-to-b from-black to-gray-900 shadow-lg hover:shadow-xl transition-shadow rounded-lg overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-4 flex justify-end items-end">
-        <CardTitle className="text-2xl font-semibold ">
-          {info.price} USD
-        </CardTitle>
-        <CardDescription className="text-sm text-gray-100">
-          Use within 30 Days
-        </CardDescription>
+    <Card className="relative overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl group">
+      {/* Background gradient on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      <CardHeader className="relative pb-4">
+        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+          <Zap className="w-6 h-6 text-primary" />
+        </div>
+        
+        <div className="space-y-1">
+          <h3 className="text-3xl font-bold">{data} GB</h3>
+          <p className="text-sm text-muted-foreground">Traffic Package</p>
+        </div>
       </CardHeader>
-      <CardContent className="flex bg-gray-200 justify-center items-center flex-col gap-6 p-6">
-        {/* Highlighted Statistic */}
-        <div className="text-8xl font-extrabold text-blue-600 text-center">
-          {info.data} GB
+
+      <CardContent className="relative space-y-6">
+        {/* Price */}
+        <div className="flex items-baseline gap-1">
+          <span className="text-4xl font-bold">${price}</span>
+          <span className="text-muted-foreground">/month</span>
         </div>
 
-        {/* List of Features */}
-        <ul className="text-center text-lg text-gray-700 space-y-1  ">
-          <li>
-            <span className="font-semibold text-blue-500">195</span> countries
+        {/* Features */}
+        <ul className="space-y-3">
+          <li className="flex items-center gap-2 text-sm">
+            <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Check className="w-3 h-3 text-primary" />
+            </div>
+            <span>Premium residential proxies</span>
           </li>
-          <li>
-            <span className="font-semibold text-blue-500">8 million</span> IPs
+          <li className="flex items-center gap-2 text-sm">
+            <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Check className="w-3 h-3 text-primary" />
+            </div>
+            <span>99.9% uptime guarantee</span>
           </li>
-          <li>
-            <span className="font-semibold text-blue-500">24/7</span> support
+          <li className="flex items-center gap-2 text-sm">
+            <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Check className="w-3 h-3 text-primary" />
+            </div>
+            <span>Instant activation</span>
           </li>
-          <li>
-            <span className="font-semibold text-blue-500">99.9%</span> uptime
-          </li>
-          <li>
-            <span className="font-semibold text-blue-500">
-              True Residential Traffic
-            </span>
+          <li className="flex items-center gap-2 text-sm">
+            <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Check className="w-3 h-3 text-primary" />
+            </div>
+            <span>24/7 support</span>
           </li>
         </ul>
-      </CardContent>
 
-      <CardFooter className="p-4 bg-gray-200    ">
-        <Button
-          variant="ringHover"
-          className="w-full bg-blue-500 text-white text-xl h-20 font-bold py-3 rounded-md hover:bg-blue-600 transition-all">
-          Purchase Now
+        {/* CTA Button */}
+        <Button 
+          className="w-full group/btn relative overflow-hidden"
+          size="lg"
+        >
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            Get Started
+            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+          </span>
         </Button>
-      </CardFooter>
+
+        {/* Popular badge for specific plans */}
+        {data === 10 && (
+          <div className="absolute -top-1 -right-1">
+            <div className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-bl-lg rounded-tr-lg">
+              Popular
+            </div>
+          </div>
+        )}
+      </CardContent>
     </Card>
   );
 }

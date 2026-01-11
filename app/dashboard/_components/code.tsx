@@ -4,14 +4,13 @@ import Image from 'next/image';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useState } from 'react';
+
 export default function Code() {
   const [code, setCode] = useState([
     {
@@ -27,7 +26,7 @@ proxies = {
 
 response = requests.get("http://example.com", proxies=proxies)
 print(response.text)
-    `,
+      `,
       iscurrent: false,
     },
     {
@@ -46,7 +45,7 @@ fetch(targetUrl, {
   .then(res => res.text())
   .then(console.log)
   .catch(console.error);
-    `,
+      `,
       iscurrent: true,
     },
     {
@@ -66,7 +65,7 @@ const agent = new HttpsProxyAgent(proxyUrl);
   const data = await response.text();
   console.log(data);
 })();
-    `,
+      `,
       iscurrent: false,
     },
     {
@@ -90,62 +89,55 @@ const agent = new HttpsProxyAgent(proxyUrl);
   };
 
   return (
-    <div className="flex flex-col justify-center items-start flex-wrap px-4 pt-4 gap-4 w-full">
-      <div className="flex justify-center items-center gap-2 w-full">
-        <Card className="w-full ">
-          <CardHeader className="flex flex- items-center justify-between =-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              <h2 className="pt-2 text-xl">Code Examples</h2>
-            </CardTitle>
-            <CardContent className="w-full">
-              <div className="flex w-full">
+    <div className="flex flex-col justify-center items-start px-4 pt-4 gap-4 w-full">
+      <Card className="w-full">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-2xl font-bold">Code Examples</CardTitle>
+        </CardHeader>
+        <CardContent className="w-full p-0">
+          <div className="flex w-full">
+            <div className="flex flex-col border-r border-gray-700 w-1/5 min-w-[140px]">
+              {code.map((c, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleClick(index)}
+                  className={`${
+                    c.iscurrent
+                      ? 'bg-gray-900 text-gray-100 border-l-4 border-blue-500'
+                      : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+                  } flex flex-col justify-center items-center gap-2 py-6 px-4 transition-all duration-200 border-b border-gray-700`}>
+                  <Image
+                    alt={`${c.lang} icon`}
+                    src={c.svg}
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
+                  <span className="text-sm font-medium">{c.lang}</span>
+                </button>
+              ))}
+            </div>
+            <div className="flex-1 overflow-hidden">
+              {code.map((c, index) => (
                 <div
-                  className={`text-xs border-1 fllex flex-col gap-1 border border-gray-700 w-1/5 text-muted-foreground `}>
-                  {code.map((c, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleClick(index)}
-                      role="button"
-                      tabIndex={0}
-                      aria-pressed={c.iscurrent}
-                      className={`${
-                        c.iscurrent
-                          ? 'border-gray-500 text-gray-200 bg-gray-900 font-extrabold'
-                          : 'text-gray-300'
-                      } h-auto flex justify-center items-center border border-gray-700 text-lg truncate px-4`}
-                      onKeyDown={(e) =>
-                        e.key === 'Enter' && handleClick(index)
-                      }>
-                      <div className="flex justify-center flex-col items-center gap-0 m-2">
-                        <Image alt="fuck" src={c.svg} width={50} height={50} />
-                        {c.lang}
-                      </div>
-                    </div>
-                  ))}
+                  key={index}
+                  className={`${c.iscurrent ? 'block' : 'hidden'}`}>
+                  <SyntaxHighlighter
+                    language={c.lang.toLowerCase()}
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      borderRadius: 0,
+                      maxHeight: '500px',
+                    }}>
+                    {c.content}
+                  </SyntaxHighlighter>
                 </div>
-                <div className="border-1 border border-gray-700 w-full">
-                  <div className="">
-                    {code.map((c, index) => (
-                      <div
-                        key={index}
-                        className={` h-full w-full ${
-                          c.iscurrent ? 'text-gray-100' : 'hidden'
-                        }`}>
-                        <SyntaxHighlighter
-                          language={c.lang}
-                          style={vscDarkPlus} // You can replace this with other styles
-                        >
-                          {c.content}
-                        </SyntaxHighlighter>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </CardHeader>
-        </Card>
-      </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

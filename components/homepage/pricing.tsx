@@ -101,13 +101,33 @@ const PricingCard = ({
       )}>
       <div>
         <CardHeader className="pb-8 pt-4">
-          {isYearly && yearlyPrice && monthlyPrice ? (
-            <div className="flex justify-between">
-              <CardTitle className="text-zinc-700 dark:text-zinc-300 text-lg">
-                {title}
-              </CardTitle>
+          <CardTitle className="text-zinc-700 dark:text-zinc-300 text-lg mb-4">
+            {title}
+          </CardTitle>
 
-              <div>{traffic}</div>
+          {traffic && traffic > 0 ? (
+            <div className="text-center my-6">
+              <div className="text-5xl font-bold text-blue-600">
+                {traffic >= 1000 ? traffic / 1000 : traffic}{' '}
+                <span className="text-2xl font-semibold text-blue-500">
+                  {traffic >= 1000 ? 'TB' : 'GB'}
+                </span>
+              </div>
+              <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+                Traffic Included
+              </div>
+            </div>
+          ) : (
+            <div className="text-center my-6">
+              <div className="text-4xl font-bold text-blue-600">Custom</div>
+              <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+                Unlimited Traffic
+              </div>
+            </div>
+          )}
+
+          {isYearly && yearlyPrice && monthlyPrice && (
+            <div className="flex justify-center mb-4">
               <div
                 className={cn(
                   'px-2.5 rounded-xl h-fit text-sm py-1 bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white',
@@ -119,49 +139,35 @@ const PricingCard = ({
                 Save ${monthlyPrice * 12 - yearlyPrice}
               </div>
             </div>
-          ) : (
-            <CardTitle className="text-zinc-700 dark:text-zinc-300 text-lg">
-              <div className="div"> {title}</div>
-              {/* <p className="w-full flex justify-end">{traffic} GBs included</p> */}
-            </CardTitle>
           )}
-          <div className="flex gap-0.5">
-            <h2 className="text-3xl font-bold text-blue-600 my-4">
-              {yearlyPrice && isYearly ? (
+
+          <div className="flex justify-center">
+            <div className="text-center">
+              {yearlyPrice && isYearly && traffic && traffic > 0 ? (
                 <>
-                  ${Math.ceil((yearlyPrice / traffic) * 100) / 100}
-                  <span className="dark:text-gray-100 text-lg font-normal	">
-                    /GB
-                  </span>
-                  <div className=" dark:text-gray-300 text-base font-bod">
-                    <span className="dark:text-gray-100 font-bold">
-                      ${yearlyPrice}
-                    </span>{' '}
-                    billed yearly
+                  <div className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
+                    ${Math.ceil((yearlyPrice / traffic) * 100) / 100}/GB
+                  </div>
+                  <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                    ${yearlyPrice} billed yearly
                   </div>
                 </>
-              ) : monthlyPrice ? (
+              ) : monthlyPrice && traffic && traffic > 0 ? (
                 <>
-                  ${Math.ceil((monthlyPrice / traffic) * 100) / 100}
-                  <span className="dark:text-gray-100 text-lg font-normal	">
-                    /GB
-                  </span>
-                  <div className=" dark:text-gray-300 text-base font-bod">
-                    <span className="dark:text-gray-100 font-bold">
-                      ${monthlyPrice}
-                    </span>{' '}
-                    billed monthly
+                  <div className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
+                    ${Math.ceil((monthlyPrice / traffic) * 100) / 100}/GB
+                  </div>
+                  <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                    ${monthlyPrice} billed monthly
                   </div>
                 </>
               ) : (
-                'Custom'
+                <div className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
+                  Contact for pricing
+                </div>
               )}
-            </h2>
+            </div>
           </div>
-
-          {/* <CardDescription className="pt-1.5 h-12">
-            {description}
-          </CardDescription> */}
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           {features.map((feature: string) => (
@@ -265,22 +271,22 @@ export default function Pricing() {
       priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
       popular: false,
     },
-    {
-      title: 'Intern - 3 GBs',
-      monthlyPrice: 7,
-      traffic: 3,
-      yearlyPrice: 10,
-      description: 'Essential features you need to get started',
-      features: [
-        '30 days validity',
-        'All countries',
-        'Premium Residential Proxies',
-        '24/7 support',
-      ],
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      actionLabel: 'Get Started',
-    },
+    // {
+    //   title: 'Intern - 3 GBs',
+    //   monthlyPrice: 7,
+    //   traffic: 3,
+    //   yearlyPrice: 10,
+    //   description: 'Essential features you need to get started',
+    //   features: [
+    //     '30 days validity',
+    //     'All countries',
+    //     'Premium Residential Proxies',
+    //     '24/7 support',
+    //   ],
+    //   priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+    //   priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+    //   actionLabel: 'Get Started',
+    // },
     {
       title: 'Junior - 10 GBs',
       monthlyPrice: 19,
@@ -301,9 +307,9 @@ export default function Pricing() {
     },
 
     {
-      title: 'Mid - 30 GBs',
-      monthlyPrice: 50,
-      traffic: 30,
+      title: 'Mid - 50 GBs',
+      monthlyPrice: 70,
+      traffic: 40,
 
       yearlyPrice: 290,
       description: 'Perfect for owners of small & medium businessess',
@@ -318,46 +324,46 @@ export default function Pricing() {
       priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
       popular: true,
     },
-    {
-      title: 'Senior - 100 GBs',
-      monthlyPrice: 130,
-      traffic: 100,
+    // {
+    //   title: 'Senior - 100 GBs',
+    //   monthlyPrice: 130,
+    //   traffic: 100,
 
-      yearlyPrice: 250,
-      description: 'Perfect for owners of small & medium businessess',
-      features: [
-        '30 days validity',
-        'All countries',
-        'Premium Residential Proxies',
-        '24/7 support',
-      ],
-      actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      popular: true,
-    },
+    //   yearlyPrice: 250,
+    //   description: 'Perfect for owners of small & medium businessess',
+    //   features: [
+    //     '30 days validity',
+    //     'All countries',
+    //     'Premium Residential Proxies',
+    //     '24/7 support',
+    //   ],
+    //   actionLabel: 'Get Started',
+    //   priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+    //   priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+    //   popular: true,
+    // },
     {
-      title: 'Team Lead - 200 GBs',
-      monthlyPrice: 220,
-      traffic: 200,
-
-      yearlyPrice: 250,
-      description: 'Perfect for owners of small & medium businessess',
-      features: [
-        '30 days validity',
-        'All countries',
-        'Premium Residential Proxies',
-        '24/7 support',
-      ],
-      actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      popular: true,
-    },
-    {
-      title: 'CTO - 500 GBs',
-      monthlyPrice: 510,
+      title: 'Team Lead - 500 GBs',
+      monthlyPrice: 550,
       traffic: 500,
+
+      yearlyPrice: 250,
+      description: 'Perfect for owners of small & medium businessess',
+      features: [
+        '30 days validity',
+        'All countries',
+        'Premium Residential Proxies',
+        '24/7 support',
+      ],
+      actionLabel: 'Get Started',
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      popular: true,
+    },
+    {
+      title: 'CTO - 1TB',
+      monthlyPrice: 710,
+      traffic: 1000,
 
       yearlyPrice: 250,
       description: 'Perfect for owners of small & medium businessess',

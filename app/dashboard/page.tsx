@@ -7,10 +7,15 @@ import { BarChartBetter } from './_components/bar-chart-better';
 import CurlTest from './_components/curl-test';
 import UsernameCard from './_components/username';
 import PasswordCard from './_components/password';
+import EndpointBuild from './_components/endpoint-build';
 
 interface UserData {
   usageBandwidth: number;
   traffic_limit: number;
+  sub_user_name?: string;
+  username?: string;
+  sub_user_password?: string;
+  password?: string;
   // Add other properties as needed
 }
 
@@ -75,10 +80,14 @@ export default function Dashboard() {
     };
 
     fetchData();
-  }, [user]); // Empty dependency array means it runs once after the component mounts
+  }, [user]);
 
   console.log('userData:', userData);
   console.log('traffic:', traffic);
+
+  // Extract username and password from userData
+  const username = userData?.sub_user_name || userData?.username || '';
+  const password = userData?.sub_user_password || userData?.password || '';
 
   if (loading) {
     return <div>Loading...</div>;
@@ -102,16 +111,16 @@ export default function Dashboard() {
       {/* Charts */}
       <div className="flex flex-col md:flex-row gap-2">
         <GaugeChartComponent
-          used={traffic.toFixed(2)}
+          used={Number(traffic.toFixed(2))}
           total={Number(
             userData?.traffic_limit ? userData?.traffic_limit / 1000 : 1
           )}
         />
         <BarChartBetter />
       </div>
-      <div className="flex justify-center items-center gap-2 w-full">
-        <CurlTest userData={userData} />
-      </div>
+
+      {/* Proxy Configuration */}
+      <EndpointBuild username={username} password={password} />
     </div>
   );
 }

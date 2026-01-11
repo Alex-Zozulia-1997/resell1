@@ -10,7 +10,7 @@ import { BlocksIcon } from "lucide-react";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import config from "@/config";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, SignInButton } from "@clerk/nextjs";
 import { Dialog, DialogClose } from "@radix-ui/react-dialog";
 
 const components: { title: string; href: string; description: string }[] = [
@@ -93,10 +93,25 @@ export default function NavBar() {
                             </Button>
                         </Link>
                     </NavigationMenuItem>
+                     <NavigationMenuItem className="max-[825px]:hidden">
+                        <Link href="/documentation" legacyBehavior passHref>
+                            <Button variant="ghost">
+                                Docs
+                            </Button>
+                        </Link>
+                    </NavigationMenuItem>
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="flex items-center gap-2 max-[825px]:hidden">
-                {userId && <UserProfile />}
+                {userId ? (
+                    <UserProfile />
+                ) : (
+                    <SignInButton mode="modal">
+                        <Button variant="default" size="sm">
+                            Sign In
+                        </Button>
+                    </SignInButton>
+                )}
                 <ModeToggle />
             </div>
         </div>

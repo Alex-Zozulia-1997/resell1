@@ -5,15 +5,36 @@ import { Button } from '../ui/button';
 import Image from 'next/image';
 import { TITLE_TAILWIND_CLASS } from '@/utils/constants';
 
+const Logo = ({
+  textSize = 'text-xl',
+  roundness = 'rounded-lg',
+}) => {
+  return (
+    <div
+      className={`flex items-center justify-center w-auto bg-gray-200 ${roundness} pl-2 pr-1 py-1`}>
+      <span
+        className={`${textSize} font-bold text-gray-100 bg-gray-900 rounded pl-1 pr-[2px] tracking-widest`}>
+        IP
+      </span>
+      <span className={`${textSize} font-bold text-gray-800 pl-[2px]`}>
+        den
+      </span>
+    </div>
+  );
+};
+
 export default function HeroSection() {
   return (
     <section
       className="flex flex-col items-center justify-center leading-6 mt-[3rem]"
       aria-label="Nextjs Starter Kit Hero">
-      <h1
-        className={`text-2xl sm:text-2xl md:text-3xl lg:text-7xl scroll--20 font-semibold tracking-tight text-center max-w-[1120px] bg-gradient-to-b dark:text-white`}>
-        AD Proxies: your ultimate proxy solution
-      </h1>
+      <div className="flex items-center justify-center gap-3 mb-4">
+        <Logo textSize="text-4xl lg:text-6xl" roundness="rounded-xl" />
+        <h1
+          className={`text-2xl sm:text-2xl md:text-3xl lg:text-6xl font-semibold tracking-tight bg-gradient-to-b dark:text-white`}>
+          : your ultimate proxy solution
+        </h1>
+      </div>
       <p className="mx-auto max-w-[700px] text-gray-500 text-center mt-2 dark:text-gray-400 lg:text-xl">
         All Countries. All targets. Premium Residential Proxies.{' '}
       </p>

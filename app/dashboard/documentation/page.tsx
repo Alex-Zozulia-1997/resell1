@@ -1,3 +1,1 @@
-export default function Documentation() {
-  return <div>Hello</div>;
-}
+// DELETE THIS FILE - documentation moved to /app/documentation/page.tsx

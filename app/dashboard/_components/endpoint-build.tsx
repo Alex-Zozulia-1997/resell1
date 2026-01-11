@@ -29,8 +29,7 @@ const typeOptions = [
 ];
 
 interface EndpointBuildProps {
-  username?: string;
-  password?: string;
+  userData?: any;
 }
 
 // Generate random session ID
@@ -43,15 +42,17 @@ const generateSessionId = (length: number = 12): string => {
   return result;
 };
 
-export default function EndpointBuild({ username, password }: EndpointBuildProps) {
-  const [country, setCountry] = useState<any>(null);
-  const [state, setState] = useState<string>('');
-  const [city, setCity] = useState<string>('');
-  const [proxyType, setProxyType] = useState<any>(typeOptions[0]);
+export default function EndpointBuild({ userData }: EndpointBuildProps) {
+  const [country, setCountry] = useState<any>({ value: 'us', label: 'United States' });
+  const [state, setState] = useState<string>('georgia');
+  const [city, setCity] = useState<string>('atlanta');
+  const [proxyType, setProxyType] = useState<any>(typeOptions[1]);
   const [protocol, setProtocol] = useState<any>(protocolOptions[0]);
   const [port, setPort] = useState<any>(null);
   const [sessionLifetime, setSessionLifetime] = useState<number>(3);
   const [sessionId, setSessionId] = useState<string>(generateSessionId());
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const proxyHost = 'proxy.ipden.io';
 
@@ -83,6 +84,21 @@ export default function EndpointBuild({ username, password }: EndpointBuildProps
     }
   }, [protocol, proxyType]); // getPort is not a dependency because it only uses protocol and proxyType
 
+  // Extract username and password from userData when it changes
+  useEffect(() => {
+    if (userData) {
+      const extractedUsername = userData?.authorization?.username || userData?.sub_user_name || userData?.username || '';
+      const extractedPassword = userData?.authorization?.password || userData?.sub_user_password || userData?.password || '';
+      
+      console.log('EndpointBuild - userData updated:', userData);
+      console.log('EndpointBuild - extracted username:', extractedUsername);
+      console.log('EndpointBuild - extracted password:', extractedPassword);
+      
+      setUsername(extractedUsername);
+      setPassword(extractedPassword);
+    }
+  }, [userData]);
+
   // Construct username with parameters
   const constructUsername = () => {
     if (!username) return 'username';
@@ -94,11 +110,11 @@ export default function EndpointBuild({ username, password }: EndpointBuildProps
     }
     
     if (state) {
-      params.push(`state-${state.toLowerCase().replace(/\s+/g, '-')}`);
+      params.push(`state-${state.toLowerCase().replace(/\s+/g, '')}`);
     }
     
     if (city) {
-      params.push(`city-${city.toLowerCase().replace(/\s+/g, '-')}`);
+      params.push(`city-${city.toLowerCase().replace(/\s+/g, '')}`);
     }
     
     // Only add session parameters if sticky/session type is selected
@@ -144,6 +160,11 @@ export default function EndpointBuild({ username, password }: EndpointBuildProps
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Proxy Configuration</CardTitle>
+          {!userData && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              Loading credentials...
+            </p>
+          )}
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4 mb-6">

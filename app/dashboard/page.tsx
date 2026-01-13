@@ -127,12 +127,60 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col justify-center items-start flex-wrap px-1 pt-4 gap-4 w-full">
-      <div className="text-3xl lg:text-5xl font-bold  w-full text-center py-2">
-        <h1>Overview</h1>
+      {/* Header with branding */}
+      <div className="w-full">
+        <div className="flex items-center justify-between w-full border-b pb-4">
+          <div>
+            <h1 className="text-3xl lg:text-5xl font-bold">Overview</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              Monitor your proxy usage and manage your account
+            </p>
+          </div>
+          <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+            <span className="text-2xl">⚡</span>
+            <div>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Status</p>
+              <p className="font-semibold text-green-600 dark:text-green-400">All Systems Operational</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Credentials Cards */}
       <div className="flex justify-center items-center gap-2 w-full">
         <UsernameCard userData={userData} />
         <PasswordCard userData={userData} />
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3">
+            <div className="text-3xl">🌍</div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Available Countries</p>
+              <p className="text-2xl font-bold">195+</p>
+            </div>
+          </div>
+        </div>
+        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3">
+            <div className="text-3xl">🚀</div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Connection Type</p>
+              <p className="text-2xl font-bold">Premium</p>
+            </div>
+          </div>
+        </div>
+        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3">
+            <div className="text-3xl">⏱️</div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Response Time</p>
+              <p className="text-2xl font-bold">&lt;2s</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Charts */}

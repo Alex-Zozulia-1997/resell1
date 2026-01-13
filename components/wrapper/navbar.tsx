@@ -13,11 +13,34 @@ import { cn } from "@/lib/utils";
 import { useAuth, SignInButton } from "@clerk/nextjs";
 import { Dialog, DialogClose } from "@radix-ui/react-dialog";
 
+const Logo = ({
+  textSize = 'text-xl',
+  roundness = 'rounded-lg',
+}) => {
+  return (
+    <div
+      className={`flex items-center justify-center w-auto bg-gray-200 dark:bg-gray-800 ${roundness} pl-2 pr-1 py-1`}>
+      <span
+        className={`${textSize} font-bold text-gray-100 bg-gray-900 dark:bg-white dark:text-gray-900 rounded pl-1 pr-[2px] tracking-widest`}>
+        IP
+      </span>
+      <span className={`${textSize} font-bold text-gray-800 dark:text-gray-200 pl-[2px]`}>
+        den
+      </span>
+    </div>
+  );
+};
+
 const components: { title: string; href: string; description: string }[] = [
     {
-        title: "Marketing Page",
-        href: "/marketing-page",
-        description: "Write some wavy here to get them to click.",
+        title: "Free Proxy List",
+        href: "/free-proxies",
+        description: "Access our updated list of free proxies from around the world"
+    },
+    {
+        title: "Pricing",
+        href: "/#pricing",
+        description: "View our pricing plans and choose the best option for you"
     },
 ];
 
@@ -30,7 +53,7 @@ export default function NavBar() {
     }
 
     return (
-        <div className="flex min-w-full fixed justify-between p-2 border-b z-10 dark:bg-black dark:bg-opacity-50 bg-white">
+        <div className="flex min-w-full fixed justify-between p-2 border-b z-10 dark:bg-black dark:bg-opacity-50 bg-white backdrop-blur-lg">
             <div className="flex justify-between w-full min-[825px]:hidden">
                 <Dialog>
                     <SheetTrigger className="p-2 transition">
@@ -62,9 +85,8 @@ export default function NavBar() {
             </div>
             <NavigationMenu>
                 <NavigationMenuList className="max-[825px]:hidden flex gap-3 w-[100%] justify-between">
-                    <Link href="/" className="pl-2 flex items-center" aria-label="Home">
-                        <BlocksIcon aria-hidden="true" />
-                        <span className="sr-only">Home</span>
+                    <Link href="/" className="pl-2 flex items-center gap-2" aria-label="Home">
+                        <Logo textSize="text-lg" roundness="rounded-md" />
                     </Link>
                 </NavigationMenuList>
                 <NavigationMenuList>
@@ -74,12 +96,16 @@ export default function NavBar() {
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
                             <ul className="flex flex-col w-[400px] gap-3 p-4 lg:w-[500px]">
+                                <ListItem
+                                    title="Free Proxy List"
+                                    href="/free-proxies">
+                                    Access our updated list of free proxies from around the world
+                                </ListItem>
                                 {components.map((component, index) => (
                                     <ListItem
                                         key={index}
                                         title={component.title}
-                                        href={component.href}
-                                    >
+                                        href={component.href}>
                                         {component.description}
                                     </ListItem>
                                 ))}

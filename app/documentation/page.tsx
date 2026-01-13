@@ -5,6 +5,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
+const Logo = ({
+  textSize = 'text-xl',
+  roundness = 'rounded-lg',
+}) => {
+  return (
+    <div
+      className={`flex items-center justify-center w-auto bg-gray-200 dark:bg-gray-800 ${roundness} pl-2 pr-1 py-1`}>
+      <span
+        className={`${textSize} font-bold text-gray-100 bg-gray-900 dark:bg-white dark:text-gray-900 rounded pl-1 pr-[2px] tracking-widest`}>
+        IP
+      </span>
+      <span className={`${textSize} font-bold text-gray-800 dark:text-gray-200 pl-[2px]`}>
+        den
+      </span>
+    </div>
+  );
+};
+
 export default function Documentation() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -13,12 +31,28 @@ export default function Documentation() {
 
   return (
     <div className="flex flex-col gap-6 p-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold">IPden API Documentation</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Complete guide to using IPden residential proxies
-        </p>
+      {/* Header with Logo */}
+      <div className="space-y-4 border-b pb-6">
+        <div className="flex items-center gap-4">
+          <Logo textSize="text-3xl" roundness="rounded-lg" />
+          <div>
+            <h1 className="text-4xl font-bold">API Documentation</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              Complete guide to using IPden residential proxies
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
+            195+ Countries
+          </span>
+          <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
+            99.9% Uptime
+          </span>
+          <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+            24/7 Support
+          </span>
+        </div>
       </div>
 
       {/* Getting Started */}

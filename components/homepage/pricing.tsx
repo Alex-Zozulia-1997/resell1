@@ -62,10 +62,10 @@ const PricingSwitch = ({ onSwitch }: PricingSwitchProps) => (
   <Tabs defaultValue="0" className="w-40 mx-auto" onValueChange={onSwitch}>
     <TabsList className="py-6 px-2">
       <TabsTrigger value="0" className="text-base">
-        <p className="text-black dark:text-white">30 days expiery</p>
+        <p className="text-black dark:text-white">1 Year Validity</p>
       </TabsTrigger>
       <TabsTrigger value="1" className="text-base">
-        <p className="text-black dark:text-white">1 year validity</p>
+        <p className="text-black dark:text-white">Unlimited</p>
       </TabsTrigger>
     </TabsList>
   </Tabs>
@@ -105,10 +105,10 @@ const PricingCard = ({
             {title}
           </CardTitle>
 
-          {traffic && traffic > 0 ? (
+          {traffic > 0 ? (
             <div className="text-center my-6">
               <div className="text-5xl font-bold text-blue-600">
-                {traffic >= 1000 ? traffic / 1000 : traffic}{' '}
+                {traffic >= 1000 ? traffic / 1000 : traffic}
                 <span className="text-2xl font-semibold text-blue-500">
                   {traffic >= 1000 ? 'TB' : 'GB'}
                 </span>
@@ -143,7 +143,7 @@ const PricingCard = ({
 
           <div className="flex justify-center">
             <div className="text-center">
-              {yearlyPrice && isYearly && traffic && traffic > 0 ? (
+              {yearlyPrice && isYearly && traffic > 0 ? (
                 <>
                   <div className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
                     ${Math.ceil((yearlyPrice / traffic) * 100) / 100}/GB
@@ -152,7 +152,7 @@ const PricingCard = ({
                     ${yearlyPrice} billed yearly
                   </div>
                 </>
-              ) : monthlyPrice && traffic && traffic > 0 ? (
+              ) : monthlyPrice && traffic > 0 ? (
                 <>
                   <div className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
                     ${Math.ceil((monthlyPrice / traffic) * 100) / 100}/GB
@@ -257,135 +257,97 @@ export default function Pricing() {
       title: 'Trial',
       monthlyPrice: 0.99,
       traffic: 1,
-
-      yearlyPrice: 259,
-      description: 'Perfect for owners of small & medium businessess',
+      yearlyPrice: 0.99,
+      description: 'Perfect for testing our service',
       features: [
         '14 days validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
       ],
-      actionLabel: 'Start the Trial',
+      actionLabel: 'Start Trial - $0.99',
       priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
       priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
       popular: false,
     },
-    // {
-    //   title: 'Intern - 3 GBs',
-    //   monthlyPrice: 7,
-    //   traffic: 3,
-    //   yearlyPrice: 10,
-    //   description: 'Essential features you need to get started',
-    //   features: [
-    //     '30 days validity',
-    //     'All countries',
-    //     'Premium Residential Proxies',
-    //     '24/7 support',
-    //   ],
-    //   priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-    //   priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-    //   actionLabel: 'Get Started',
-    // },
     {
       title: 'Junior - 10 GBs',
       monthlyPrice: 19,
       traffic: 10,
-
-      yearlyPrice: 250,
-      description: 'Perfect for owners of small & medium businessess',
+      yearlyPrice: 19,
+      description: 'Perfect for small projects',
       features: [
-        '30 days validity',
+        '1 year validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
       ],
       actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_10GB,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_10GB,
       popular: false,
     },
-
     {
       title: 'Mid - 50 GBs',
       monthlyPrice: 70,
       traffic: 40,
-
-      yearlyPrice: 290,
-      description: 'Perfect for owners of small & medium businessess',
+      yearlyPrice: 70,
+      description: 'Perfect for small & medium businesses',
       features: [
-        '30 days validity',
+        '1 year validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
       ],
       actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_30GB,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_30GB_YEARLY,
       popular: true,
     },
-    // {
-    //   title: 'Senior - 100 GBs',
-    //   monthlyPrice: 130,
-    //   traffic: 100,
-
-    //   yearlyPrice: 250,
-    //   description: 'Perfect for owners of small & medium businessess',
-    //   features: [
-    //     '30 days validity',
-    //     'All countries',
-    //     'Premium Residential Proxies',
-    //     '24/7 support',
-    //   ],
-    //   actionLabel: 'Get Started',
-    //   priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-    //   priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-    //   popular: true,
-    // },
     {
       title: 'Team Lead - 500 GBs',
       monthlyPrice: 550,
       traffic: 500,
-
-      yearlyPrice: 250,
-      description: 'Perfect for owners of small & medium businessess',
+      yearlyPrice: 550,
+      description: 'Perfect for growing teams',
       features: [
-        '30 days validity',
+        'Unlimited validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
+        'Priority support',
       ],
       actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_500GB,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_500GB_YEARLY,
       popular: true,
     },
     {
       title: 'CTO - 1TB',
       monthlyPrice: 710,
       traffic: 1000,
-
-      yearlyPrice: 250,
-      description: 'Perfect for owners of small & medium businessess',
+      yearlyPrice: 710,
+      description: 'For high-volume operations',
       features: [
-        '30 days validity',
+        'Unlimited validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
+        'Priority support',
       ],
       actionLabel: 'Get Started',
       priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
       priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
       popular: true,
     },
-
     {
       title: 'Enterprise',
       price: 'Custom',
       traffic: 0,
-      description: 'Dedicated support and infrastructure to fit your needs',
+      description: 'Dedicated support and infrastructure',
       features: [
         'Custom deal',
+        'Unlimited validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
@@ -402,7 +364,7 @@ export default function Pricing() {
     <div>
       <PricingHeader
         title="Select the Best Plan for You"
-        subtitle="pay attention to the refund policy"
+        subtitle="Choose between 1 year validity or unlimited validity"
       />
       <PricingSwitch onSwitch={togglePricingPeriod} />
       <section className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-8 mt-8">

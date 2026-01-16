@@ -38,9 +38,17 @@ const components: { title: string; href: string; description: string }[] = [
         description: "Access our updated list of free proxies from around the world"
     },
     {
-        title: "Pricing",
-        href: "/#pricing",
-        description: "View our pricing plans and choose the best option for you"
+        title: "IP Checker",
+        href: "/ip-checker",
+        description: "Check any IP address for location, provider, and proxy detection"
+    },
+];
+
+const products: { title: string; href: string; description: string }[] = [
+    {
+        title: "Residential Proxies",
+        href: "/products/residential-proxies",
+        description: "Premium residential IPs from 195+ countries with 99.9% uptime"
     },
 ];
 
@@ -92,15 +100,27 @@ export default function NavBar() {
                 <NavigationMenuList>
                     <NavigationMenuItem className="max-[825px]:hidden ml-5">
                         <NavigationMenuTrigger className="dark:bg-black dark:bg-opacity-50">
+                            Products
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                            <ul className="flex flex-col w-[400px] gap-3 p-4 lg:w-[500px]">
+                                {products.map((product, index) => (
+                                    <ListItem
+                                        key={index}
+                                        title={product.title}
+                                        href={product.href}>
+                                        {product.description}
+                                    </ListItem>
+                                ))}
+                            </ul>
+                        </NavigationMenuContent>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem className="max-[825px]:hidden ml-5">
+                        <NavigationMenuTrigger className="dark:bg-black dark:bg-opacity-50">
                             Features
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
                             <ul className="flex flex-col w-[400px] gap-3 p-4 lg:w-[500px]">
-                                <ListItem
-                                    title="Free Proxy List"
-                                    href="/free-proxies">
-                                    Access our updated list of free proxies from around the world
-                                </ListItem>
                                 {components.map((component, index) => (
                                     <ListItem
                                         key={index}
@@ -113,6 +133,13 @@ export default function NavBar() {
                         </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem className="max-[825px]:hidden">
+                        <Link href="/#pricing" legacyBehavior passHref>
+                            <Button variant="ghost">
+                                Pricing
+                            </Button>
+                        </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem className="max-[825px]:hidden">
                         <Link href="/dashboard" legacyBehavior passHref>
                             <Button variant="ghost">
                                 Dashboard
@@ -123,6 +150,20 @@ export default function NavBar() {
                         <Link href="/documentation" legacyBehavior passHref>
                             <Button variant="ghost">
                                 Docs
+                            </Button>
+                        </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem className="max-[825px]:hidden">
+                        <Link href="/contact-sales" legacyBehavior passHref>
+                            <Button variant="ghost">
+                                Contact Sales
+                            </Button>
+                        </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem className="max-[825px]:hidden">
+                        <Link href="/partners" legacyBehavior passHref>
+                            <Button variant="ghost">
+                                Partners
                             </Button>
                         </Link>
                     </NavigationMenuItem>

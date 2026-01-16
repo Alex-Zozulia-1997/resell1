@@ -8,6 +8,8 @@ import PageWrapper from "@/components/wrapper/page-wrapper";
 import config from "@/config";
 import { Separator } from '@/components/ui/separator';
 import UseCases from '@/components/homepage/use-cases';
+import IPCheckerCTA from '@/components/homepage/ip-checker-cta';
+import EnterpriseCTA from '@/components/homepage/enterprise-cta';
 
 export default function Home() {
   return (
@@ -17,11 +19,13 @@ export default function Home() {
         <Separator className="mb-[8rem]" />
         <UseCases />
         <Separator className="mb-[8rem]" />
+        <IPCheckerCTA />
+        <Separator className="mb-[8rem]" />
         <section id="pricing">
           <Pricing />
         </section>
-                <Separator className="mb-[8rem]" />
-
+        <Separator className="mb-[8rem]" />
+        <EnterpriseCTA />
         <div className="flex justify-center items-center w-full my-[8rem]">
           <AccordionComponent />
         </div>

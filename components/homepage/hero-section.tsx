@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { BorderBeam } from '../magicui/border-beam';
 import { Button } from '../ui/button';
 import Image from 'next/image';
+import { OrbitingCirclesComponent } from './orbiting-circles';
 
 const Logo = ({
   textSize = 'text-xl',
@@ -119,35 +120,49 @@ export default function HeroSection() {
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
           Why Choose IPden?
         </h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="text-center p-6">
-            <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Globe className="w-7 h-7 text-blue-600" />
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Features List */}
+          <div className="space-y-6">
+            <div className="flex gap-4 p-6 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Globe className="w-7 h-7 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Global Coverage</h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Access proxies from 195+ countries with city and state level targeting
+                </p>
+              </div>
             </div>
-            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Global Coverage</h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Access proxies from 195+ countries with city and state level targeting
-            </p>
+
+            <div className="flex gap-4 p-6 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Zap className="w-7 h-7 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Lightning Fast</h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Premium residential IPs with response times under 2 seconds
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 p-6 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Shield className="w-7 h-7 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Secure & Private</h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Elite anonymity level with enterprise-grade encryption
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="text-center p-6">
-            <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Zap className="w-7 h-7 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Lightning Fast</h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Premium residential IPs with response times under 2 seconds
-            </p>
-          </div>
-
-          <div className="text-center p-6">
-            <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-7 h-7 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Secure & Private</h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Elite anonymity level with enterprise-grade encryption
-            </p>
+          {/* Orbiting Circles Visualization */}
+          <div className="flex justify-center">
+            <OrbitingCirclesComponent />
           </div>
         </div>
       </div>

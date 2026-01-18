@@ -5,9 +5,14 @@ import Image from 'next/image';
 export function OrbitingCirclesComponent() {
   return (
     <div className="relative flex h-[500px] w-full max-w-[32rem] items-center justify-center overflow-hidden rounded-lg">
-      <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-500/80 bg-clip-text text-center text-8xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10">
-        Open Web{' '}
-      </span>
+      <div className="flex items-center justify-center w-auto bg-gray-200 dark:bg-gray-800 rounded-2xl pl-4 pr-2 py-2">
+        <span className="text-6xl font-bold text-gray-100 bg-gray-900 dark:bg-white dark:text-gray-900 rounded pl-2 pr-1 tracking-widest">
+          IP
+        </span>
+        <span className="text-6xl font-bold text-gray-800 dark:text-gray-200 pl-1">
+          den
+        </span>
+      </div>
 
       {/* Inner Circles */}
       <OrbitingCircles

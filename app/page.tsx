@@ -17,7 +17,7 @@ export default function Home() {
       <HeroSection />
       
       <div className="py-[4rem]">
-          <section id="add-traffic">
+        <section id="add-traffic">
           <AddTrafficComponent />
         </section>
         <Separator className="mb-[8rem]" />

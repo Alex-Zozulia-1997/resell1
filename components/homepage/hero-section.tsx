@@ -23,6 +23,9 @@ const Logo = ({
 };
 
 export default function HeroSection() {
+  const discordUrl = process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/HUcHdrrDgY';
+  // const discordUrl = 'https://discord.gg/HUcHdrrDgY'; // OLD: Hardcoded
+
   return (
     <section
       className="flex flex-col items-center justify-center px-4 py-16 lg:py-24"
@@ -46,13 +49,13 @@ export default function HeroSection() {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
           <Link href="/dashboard">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
-              Get Started Free
+              Get Started 
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>
           <Link href="/free-proxies">
             <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
-              Try Free Proxies
+              Try Proxies for 1$
             </Button>
           </Link>
         </div>
@@ -167,6 +170,17 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
+
+      <Link
+        href={discordUrl}
+        target="_blank"
+        className="mt-5"
+        aria-label="Join Discord (opens in a new tab)">
+        <Button variant="outline" className="flex gap-1">
+          Join Discord
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+        </Button>
+      </Link>
     </section>
   );
 }

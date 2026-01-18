@@ -69,7 +69,11 @@ export default function IPChecker() {
   const getIPData = () => {
     if (!result) return null;
     const ipKey = Object.keys(result).find((key) => key !== 'status');
-    return ipKey ? { ip: ipKey, ...result[ipKey] } : null;
+    if (!ipKey) return null;
+    const ipValue = result[ipKey];
+    return typeof ipValue === 'object' && ipValue !== null 
+      ? { ip: ipKey, ...ipValue } 
+      : null;
   };
 
   const ipData = getIPData();
@@ -107,7 +111,7 @@ export default function IPChecker() {
         {/* Note for localhost */}
         <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
           <p className="text-xs text-yellow-800 dark:text-yellow-200">
-            <strong>Note:</strong> "Check My IP" may not work correctly on localhost. For best results, enter a specific IP address or deploy to production.
+            <strong>Note:</strong> &quot;Check My IP&quot; may not work correctly on localhost. For best results, enter a specific IP address or deploy to production.
           </p>
         </div>
 

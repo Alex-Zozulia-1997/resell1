@@ -140,9 +140,9 @@ export default function NavBar() {
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem className="max-[825px]:hidden">
-                        <Link href="/dashboard" legacyBehavior passHref>
+                        <Link href="/#faq" legacyBehavior passHref>
                             <Button variant="ghost">
-                                Dashboard
+                                FAQ
                             </Button>
                         </Link>
                     </NavigationMenuItem>
@@ -170,6 +170,13 @@ export default function NavBar() {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="flex items-center gap-2 max-[825px]:hidden">
+                {userId && (
+                    <Link href="/dashboard" legacyBehavior passHref>
+                        <Button variant="ghost" size="sm">
+                            Dashboard
+                        </Button>
+                    </Link>
+                )}
                 {userId ? (
                     <UserProfile />
                 ) : (

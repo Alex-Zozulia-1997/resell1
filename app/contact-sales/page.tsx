@@ -49,6 +49,10 @@ export default function ContactSales() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Get contact info from environment variables
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'sales@ipden.io';
+  const discordUrl = process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/HUcHdrrDgY';
+
   if (submitted) {
     return (
       <div className="min-h-screen bg-white dark:bg-black py-16 px-4">
@@ -128,7 +132,7 @@ export default function ContactSales() {
           <CardHeader>
             <CardTitle>Get in Touch</CardTitle>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Fill out the form below and we'll get back to you soon
+              Fill out the form below and we&apos;ll get back to you soon
             </p>
           </CardHeader>
           <CardContent>
@@ -242,11 +246,17 @@ export default function ContactSales() {
             Or reach us directly:
           </p>
           <div className="flex flex-wrap justify-center gap-6">
-            <a href="mailto:sales@ipden.io" className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+            <a 
+              href={`mailto:${contactEmail}`}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
               <Mail className="w-4 h-4" />
-              sales@ipden.io
+              {contactEmail}
             </a>
-            <a href="https://discord.gg/HUcHdrrDgY" target="_blank" className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+            <a 
+              href={discordUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
               <MessageSquare className="w-4 h-4" />
               Join our Discord
             </a>

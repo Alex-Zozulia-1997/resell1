@@ -50,7 +50,7 @@ export default function DashboardSideBar() {
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
                 <HomeIcon className="h-3 w-3" />
               </div>
-              Home
+              Residential Proxies
             </Link>
             <Link
               className={clsx(

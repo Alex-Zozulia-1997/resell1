@@ -100,12 +100,12 @@ const PricingCard = ({
         }
       )}>
       <div>
-        <CardHeader className="pb-8 pt-4">
-          <CardTitle className="text-zinc-700 dark:text-zinc-300 text-lg mb-4">
+        <CardHeader className="pb-3 pt-3">
+          <CardTitle className="text-zinc-700 dark:text-zinc-300 text-lg mb-2 text-center font-bold">
             {title}
           </CardTitle>
 
-          {traffic > 0 ? (
+          {traffic && traffic > 0 ? (
             <div className="text-center my-6">
               <div className="text-5xl font-bold text-blue-600">
                 {traffic >= 1000 ? traffic / 1000 : traffic}
@@ -126,39 +126,15 @@ const PricingCard = ({
             </div>
           )}
 
-          {isYearly && yearlyPrice && monthlyPrice && (
-            <div className="flex justify-center mb-4">
-              <div
-                className={cn(
-                  'px-2.5 rounded-xl h-fit text-sm py-1 bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white',
-                  {
-                    'bg-gradient-to-r from-orange-400 to-rose-400 dark:text-black ':
-                      popular,
-                  }
-                )}>
-                Save ${monthlyPrice * 12 - yearlyPrice}
-              </div>
-            </div>
-          )}
-
           <div className="flex justify-center">
             <div className="text-center">
-              {yearlyPrice && isYearly && traffic > 0 ? (
-                <>
-                  <div className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
-                    ${Math.ceil((yearlyPrice / traffic) * 100) / 100}/GB
-                  </div>
-                  <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-                    ${yearlyPrice} billed yearly
-                  </div>
-                </>
-              ) : monthlyPrice && traffic > 0 ? (
+              {monthlyPrice && traffic && traffic > 0 ? (
                 <>
                   <div className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
                     ${Math.ceil((monthlyPrice / traffic) * 100) / 100}/GB
                   </div>
                   <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-                    ${monthlyPrice} billed monthly
+                    ${monthlyPrice} billed once
                   </div>
                 </>
               ) : (
@@ -210,9 +186,6 @@ const CheckItem = ({ text }: { text: string }) => (
 );
 
 export default function Pricing() {
-  const [isYearly, setIsYearly] = useState<boolean>(false);
-  const togglePricingPeriod = (value: string) =>
-    setIsYearly(parseInt(value) === 1);
   const { user } = useUser();
   const [stripePromise, setStripePromise] = useState<Promise<any> | null>(null);
 
@@ -254,61 +227,44 @@ export default function Pricing() {
 
   const plans = [
     {
-      title: 'Trial',
-      monthlyPrice: 0.99,
-      traffic: 1,
-      yearlyPrice: 0.99,
-      description: 'Perfect for testing our service',
+      title: 'Intern',
+      monthlyPrice: 11,
+      traffic: 5,
+      yearlyPrice: 11,
+      description: 'Perfect for getting started',
       features: [
-        '14 days validity',
+        'Unlimited validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
       ],
-      actionLabel: 'Start Trial - $0.99',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      actionLabel: 'Get Started',
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_10GB!,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_10GB!,
       popular: false,
     },
     {
-      title: 'Junior - 10 GBs',
-      monthlyPrice: 19,
-      traffic: 10,
-      yearlyPrice: 19,
+      title: 'Junior',
+      monthlyPrice: 55,
+      traffic: 50,
+      yearlyPrice: 55,
       description: 'Perfect for small projects',
       features: [
-        '1 year validity',
+        'Unlimited validity',
         'All countries',
         'Premium Residential Proxies',
         '24/7 support',
       ],
       actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_10GB,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_10GB,
-      popular: false,
-    },
-    {
-      title: 'Mid - 50 GBs',
-      monthlyPrice: 70,
-      traffic: 40,
-      yearlyPrice: 70,
-      description: 'Perfect for small & medium businesses',
-      features: [
-        '1 year validity',
-        'All countries',
-        'Premium Residential Proxies',
-        '24/7 support',
-      ],
-      actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_30GB,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_30GB_YEARLY,
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_30GB!,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_30GB_YEARLY!,
       popular: true,
     },
     {
-      title: 'Team Lead - 500 GBs',
-      monthlyPrice: 550,
-      traffic: 500,
-      yearlyPrice: 550,
+      title: 'Senior',
+      monthlyPrice: 160,
+      traffic: 200,
+      yearlyPrice: 160,
       description: 'Perfect for growing teams',
       features: [
         'Unlimited validity',
@@ -318,15 +274,15 @@ export default function Pricing() {
         'Priority support',
       ],
       actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_500GB,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_500GB_YEARLY,
-      popular: true,
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_200GB!,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_200GB_YEARLY!,
+      popular: false,
     },
     {
-      title: 'CTO - 1TB',
-      monthlyPrice: 710,
-      traffic: 1000,
-      yearlyPrice: 710,
+      title: 'CTO',
+      monthlyPrice: 350,
+      traffic: 500,
+      yearlyPrice: 350,
       description: 'For high-volume operations',
       features: [
         'Unlimited validity',
@@ -336,26 +292,8 @@ export default function Pricing() {
         'Priority support',
       ],
       actionLabel: 'Get Started',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      popular: true,
-    },
-    {
-      title: 'Enterprise',
-      price: 'Custom',
-      traffic: 0,
-      description: 'Dedicated support and infrastructure',
-      features: [
-        'Custom deal',
-        'Unlimited validity',
-        'All countries',
-        'Premium Residential Proxies',
-        '24/7 support',
-        'Dedicated account manager',
-      ],
-      actionLabel: 'Contact Sales',
-      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      priceIdMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_500GB!,
+      priceIdYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_500GB_YEARLY!,
       exclusive: true,
     },
   ];
@@ -363,10 +301,69 @@ export default function Pricing() {
   return (
     <div>
       <PricingHeader
-        title="Select the Best Plan for You"
-        subtitle="Choose between 1 year validity or unlimited validity"
+        title="Only unlimited validity plans"
+        subtitle="No subscriptions, no recurring payments"
       />
-      <PricingSwitch onSwitch={togglePricingPeriod} />
+
+      {/* Trial Card - Wider and Shorter */}
+      <div className="max-w-6xl mx-auto mt-1 mb-4">
+        <Card className="border-2 border-green-600">
+          <CardContent className="py-4">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-6">
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-green-600">$0.99</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    1 GB Trial
+                  </div>
+                </div>
+                <div className="border-l border-gray-300 dark:border-gray-700 h-16 hidden md:block"></div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Try IPden Risk-Free</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    Test our premium residential proxies for 14 days
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="hidden lg:flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">All countries</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">24/7 support</span>
+                  </div>
+                </div>
+                <Button
+                  size="lg"
+                  className="bg-green-600 hover:bg-green-700 text-white px-8"
+                  onClick={() => {
+                    if (user?.id) {
+                      handleCheckout(
+                        process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_TRIAL!,
+                        true
+                      );
+                    } else {
+                      toast('Please login or sign up to purchase', {
+                        description: 'You must be logged in to make a purchase',
+                        action: {
+                          label: 'Sign Up',
+                          onClick: () => (window.location.href = '/sign-up'),
+                        },
+                      });
+                    }
+                  }}>
+                  Start Trial
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Pricing Cards */}
       <section className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-8 mt-8">
         {plans.map((plan) => {
           return (
@@ -375,11 +372,48 @@ export default function Pricing() {
               handleCheckout={handleCheckout}
               key={plan.title}
               {...plan}
-              isYearly={isYearly}
+              isYearly={false}
             />
           );
         })}
       </section>
+
+      {/* Enterprise CTA Card */}
+      <div className="max-w-4xl mx-auto mt-12">
+        <Card className="border-2 border-blue-600">
+          <CardContent className="py-8">
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-bold mb-3">
+                Need More Than 500GB?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+                Get custom pricing, dedicated support, and enterprise-grade
+                infrastructure tailored to your needs
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <span className="text-sm">Custom bandwidth packages</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <span className="text-sm">Dedicated account manager</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <span className="text-sm">Priority 24/7 support</span>
+                </div>
+              </div>
+              <Button
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                onClick={() => (window.location.href = '/contact-sales')}>
+                Contact Sales
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

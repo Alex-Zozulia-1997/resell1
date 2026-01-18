@@ -10,8 +10,8 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { Bitcoin, CreditCard, Zap } from 'lucide-react';
 
-export default function AddTraffic() {
-  const { user } = useUser();
+export default function AddTrafficComponent() {
+  const { user, isSignedIn } = useUser();
   const [trafficAmount, setTrafficAmount] = useState<number>(10);
   const [stripePromise, setStripePromise] = useState<Promise<any> | null>(null);
   const [loading, setLoading] = useState(false);
@@ -41,8 +41,14 @@ export default function AddTraffic() {
   };
 
   const handleCheckout = async () => {
-    if (!user?.id) {
-      toast.error('Please sign in to purchase traffic');
+    if (!isSignedIn || !user?.id) {
+      toast.info('Sign in to purchase traffic', {
+        description: 'Create an account or sign in to get started',
+        duration: 4000,
+      });
+      setTimeout(() => {
+        window.location.href = '/sign-up';
+      }, 1000);
       return;
     }
 
@@ -80,8 +86,14 @@ export default function AddTraffic() {
   };
 
   const handleCryptoPayment = async () => {
-    if (!user?.id) {
-      toast.error('Please sign in to purchase traffic');
+    if (!isSignedIn || !user?.id) {
+      toast.info('Sign in to purchase traffic', {
+        description: 'Create an account or sign in to get started',
+        duration: 4000,
+      });
+      setTimeout(() => {
+        window.location.href = '/sign-up';
+      }, 1000);
       return;
     }
 
@@ -116,11 +128,13 @@ export default function AddTraffic() {
   };
 
   return (
-    <div className="p-6 w-full">
-      <h1 className="text-3xl font-bold mb-2">Add More Traffic</h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-6">
-        Purchase additional bandwidth for your proxy service
-      </p>
+    <div className="w-full max-w-7xl mx-auto px-4">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold mb-2">Buy Custom Amount without an expiration date</h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          Purchase additional bandwidth with flexible pricing
+        </p>
+      </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column - Traffic Selector */}
@@ -146,13 +160,13 @@ export default function AddTraffic() {
                 <Slider
                   value={[trafficAmount]}
                   onValueChange={(value) => setTrafficAmount(value[0])}
-                  min={2}
+                  min={5}
                   max={1000}
                   step={1}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-2">
-                  <span>2 GB</span>
+                  <span>5 GB</span>
                   <span>250 GB</span>
                   <span>500 GB</span>
                   <span>1000 GB</span>
@@ -180,10 +194,10 @@ export default function AddTraffic() {
                     <div>
                       <h4 className="font-semibold mb-1 text-sm">Volume Discounts Applied</h4>
                       <div className="grid grid-cols-2 gap-x-4 text-xs text-gray-700 dark:text-gray-300">
-                        <div>• 2-5 GB: $2.20/GB</div>
-                        <div>• 6-50 GB: $1.10/GB (50% off)</div>
-                        <div>• 51-200 GB: $0.80/GB (64% off)</div>
-                        <div className="col-span-2">• 200+ GB: $0.70/GB (68% off)</div>
+                        <div>• 5 GB: $2.20/GB</div>
+                        <div>• 6-50 GB: $1.10/GB</div>
+                        <div>• 51-200 GB: $0.80/GB</div>
+                        <div className="col-span-2">• 200+ GB: $0.70/GB</div>
                       </div>
                     </div>
                   </div>
@@ -236,11 +250,13 @@ export default function AddTraffic() {
               </div>
               <Button
                 onClick={handleCheckout}
-                disabled={loading}
+                disabled={loading || !isSignedIn}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12"
                 size="lg">
                 {loading ? (
                   'Processing...'
+                ) : !isSignedIn ? (
+                  'Sign Up to Purchase'
                 ) : (
                   <>
                     <Zap className="w-4 h-4 mr-2" />
@@ -266,11 +282,11 @@ export default function AddTraffic() {
               </div>
               <Button
                 onClick={handleCryptoPayment}
-                disabled={loading}
+                disabled={loading || !isSignedIn}
                 variant="outline"
                 className="w-full h-12"
                 size="lg">
-                {loading ? 'Processing...' : 'Pay with Crypto'}
+                {loading ? 'Processing...' : !isSignedIn ? 'Sign Up to Purchase' : 'Pay with Crypto'}
               </Button>
             </CardContent>
           </Card>

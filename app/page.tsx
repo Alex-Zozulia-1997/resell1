@@ -9,13 +9,17 @@ import config from "@/config";
 import { Separator } from '@/components/ui/separator';
 import UseCases from '@/components/homepage/use-cases';
 import IPCheckerCTA from '@/components/homepage/ip-checker-cta';
-import EnterpriseCTA from '@/components/homepage/enterprise-cta';
+import AddTrafficComponent from '@/components/homepage/add-traffic';
 
 export default function Home() {
   return (
     <PageWrapper>
       <HeroSection />
+      
       <div className="py-[4rem]">
+          <section id="add-traffic">
+          <AddTrafficComponent />
+        </section>
         <Separator className="mb-[8rem]" />
         <UseCases />
         <Separator className="mb-[8rem]" />
@@ -25,10 +29,13 @@ export default function Home() {
           <Pricing />
         </section>
         <Separator className="mb-[8rem]" />
-        <EnterpriseCTA />
-        <div className="flex justify-center items-center w-full my-[8rem]">
-          <AccordionComponent />
-        </div>
+      
+        <Separator className="mb-[8rem]" />
+        <section id="faq">
+          <div className="flex justify-center items-center w-full my-[8rem]">
+            <AccordionComponent />
+          </div>
+        </section>
       </div>
     </PageWrapper>
   );

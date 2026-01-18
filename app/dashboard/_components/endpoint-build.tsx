@@ -54,7 +54,15 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const proxyHost = 'proxy.ipden.io';
+  // Use environment variable with fallback
+  const proxyHost = process.env.NEXT_PUBLIC_PROXY_HOST || 'proxy.ipden.io';
+  // const proxyHost = 'proxy.ipden.io'; // OLD: Hardcoded value
+
+  // Log to verify env var is loaded
+  useEffect(() => {
+    console.log('EndpointBuild - NEXT_PUBLIC_PROXY_HOST:', process.env.NEXT_PUBLIC_PROXY_HOST);
+    console.log('EndpointBuild - Using proxyHost:', proxyHost);
+  }, []);
 
   // Dynamically determine port based on protocol and type
   const getPort = () => {
@@ -110,11 +118,11 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
     }
     
     if (state) {
-      params.push(`state-${state.toLowerCase().replace(/\s+/g, '')}`);
+      params.push(`state-${state.toLowerCase().replace(/\s+/g, '-')}`);
     }
     
     if (city) {
-      params.push(`city-${city.toLowerCase().replace(/\s+/g, '')}`);
+      params.push(`city-${city.toLowerCase().replace(/\s+/g, '-')}`);
     }
     
     // Only add session parameters if sticky/session type is selected

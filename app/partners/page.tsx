@@ -96,7 +96,7 @@ export default function PartnersPage() {
             Earn Up to 30% Commission
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-8">
-            Join our partner program and earn generous commissions by promoting the world's best residential proxy service
+            Join our partner program and earn generous commissions by promoting the world&apos;s best residential proxy service
           </p>
         </div>
       </section>
@@ -273,7 +273,7 @@ export default function PartnersPage() {
               Apply to Become a Partner
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Fill out the form below and we'll review your application within 2-3 business days
+              Fill out the form below and we&apos;ll review your application within 2-3 business days
             </p>
           </div>
 
@@ -462,7 +462,7 @@ export default function PartnersPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Cookie duration ranges from 30 to 90 days depending on your tier. This means you'll earn commission on any purchase made within that timeframe after a user clicks your referral link.
+                  Cookie duration ranges from 30 to 90 days depending on your tier. This means you&apos;ll earn commission on any purchase made within that timeframe after a user clicks your referral link.
                 </p>
               </CardContent>
             </Card>

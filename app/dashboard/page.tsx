@@ -8,6 +8,7 @@ import CurlTest from './_components/curl-test';
 import UsernameCard from './_components/username';
 import PasswordCard from './_components/password';
 import EndpointBuild from './_components/endpoint-build';
+import { Globe, Zap, Clock, CheckCircle } from 'lucide-react';
 
 interface UserData {
   usageBandwidth: number;
@@ -137,7 +138,7 @@ export default function Dashboard() {
             </p>
           </div>
           <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-            <span className="text-2xl">⚡</span>
+            <CheckCircle className="w-8 h-8 text-green-600" />
             <div>
               <p className="text-xs text-gray-600 dark:text-gray-400">Status</p>
               <p className="font-semibold text-green-600 dark:text-green-400">All Systems Operational</p>
@@ -153,10 +154,10 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
         <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="text-3xl">🌍</div>
+            <Globe className="w-10 h-10 text-blue-600" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Available Countries</p>
               <p className="text-2xl font-bold">195+</p>
@@ -165,7 +166,7 @@ export default function Dashboard() {
         </div>
         <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="text-3xl">🚀</div>
+            <Zap className="w-10 h-10 text-blue-600" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Connection Type</p>
               <p className="text-2xl font-bold">Premium</p>
@@ -174,23 +175,25 @@ export default function Dashboard() {
         </div>
         <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="text-3xl">⏱️</div>
+            <Clock className="w-10 h-10 text-blue-600" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Response Time</p>
-              <p className="text-2xl font-bold">&lt;2s</p>
+              <p className="text-2xl font-bold">&lt;550ms</p>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Charts */}
       <div className="flex flex-col md:flex-row gap-2 w-full">
-        <GaugeChartComponent
-          used={Number(traffic.toFixed(2))}
-          total={Number(
-            userData?.traffic_limit ? userData?.traffic_limit / 1000 : 1
-          )}
-        />
+        <div className="w-full md:w-2/5">
+          <GaugeChartComponent
+            used={Number(traffic.toFixed(2))}
+            total={Number(
+              userData?.traffic_limit ? userData?.traffic_limit / 1000 : 1
+            )}
+          />
+        </div>
         <div className="flex-1">
           <BarChartBetter />
         </div>

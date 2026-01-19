@@ -21,7 +21,7 @@ export function GaugeChartComponent({
   const gaugeValue = used / total; // Example value, 65% filled
 
   return (
-    <Card className="w-full md:w-2/5">
+    <Card className="w-full h-full flex flex-col">
       <CardHeader>
         <CardTitle>
           <div className="flex  justify-between">
@@ -31,8 +31,8 @@ export function GaugeChartComponent({
         </CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex justify-start items-end mt-10">
+      <CardContent className="flex-1 flex items-center justify-center">
+        <div className="flex justify-start items-end w-full">
           <GaugeChart
             className="gauge-chart"
             id="gauge-chart"

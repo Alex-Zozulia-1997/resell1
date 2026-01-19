@@ -80,7 +80,7 @@ export default function ResidentialProxies() {
               <div className="text-sm text-gray-600 dark:text-gray-400">Uptime</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl lg:text-5xl font-bold text-blue-600 mb-2">&lt;2s</div>
+              <div className="text-4xl lg:text-5xl font-bold text-blue-600 mb-2">&lt;600ms</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Response Time</div>
             </div>
           </div>
@@ -113,7 +113,7 @@ export default function ResidentialProxies() {
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Lightning Fast</h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Average response time under 2 seconds with unlimited concurrent connections
+                  Average response time under 550ms with unlimited concurrent connections
                 </p>
               </CardContent>
             </Card>
@@ -316,7 +316,7 @@ export default function ResidentialProxies() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/dashboard">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
-                Start Free Trial
+                Start 1$ Trial
               </Button>
             </Link>
             <Link href="/contact-sales">

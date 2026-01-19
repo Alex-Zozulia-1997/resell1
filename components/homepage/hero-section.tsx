@@ -25,7 +25,6 @@ const Logo = ({
 
 export default function HeroSection() {
   const discordUrl = process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/HUcHdrrDgY';
-  // const discordUrl = 'https://discord.gg/HUcHdrrDgY'; // OLD: Hardcoded
 
   return (
     <section
@@ -94,7 +93,7 @@ export default function HeroSection() {
             <div className="text-sm text-gray-600 dark:text-gray-400">Uptime</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl lg:text-5xl font-bold text-blue-600 mb-1">&lt;2s</div>
+            <div className="text-4xl lg:text-5xl font-bold text-blue-600 mb-1">&lt;600ms</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Response Time</div>
           </div>
         </div>
@@ -104,14 +103,14 @@ export default function HeroSection() {
       <div className="w-full max-w-6xl mx-auto mb-16">
         <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-2xl">
           <Image
-            src="https://utfs.io/f/31dba2ff-6c3b-4927-99cd-b928eaa54d5f-5w20ij.png"
+            src="/db.png"
             alt="IPden Dashboard Preview"
             width={1100}
             height={550}
             priority={true}
             className="w-full h-auto"
           />
-          <BorderBeam size={250} duration={18} delay={9} />
+          <BorderBeam size={350} duration={18} delay={9} />
         </div>
       </div>
 
@@ -142,7 +141,7 @@ export default function HeroSection() {
               <div>
                 <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Lightning Fast</h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Premium residential IPs with response times under 2 seconds
+                  Premium residential IPs with response times under 600ms
                 </p>
               </div>
             </div>

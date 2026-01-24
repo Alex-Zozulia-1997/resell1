@@ -10,13 +10,24 @@ import { Separator } from '@/components/ui/separator';
 import UseCases from '@/components/homepage/use-cases';
 import IPCheckerCTA from '@/components/homepage/ip-checker-cta';
 import AddTrafficComponent from '@/components/homepage/add-traffic';
+import GlobalCoverageMap from '@/components/homepage/global-coverage-map';
+import WhyChooseSection from '@/components/homepage/why-choose-section';
 
 export default function Home() {
   return (
     <PageWrapper>
       <HeroSection />
       
-      <div className="py-[4rem]">
+      <div className="pb-[4rem]">
+         <section id="global-coverage">
+          <GlobalCoverageMap />
+        </section>
+        <section id="why-choose">
+          <WhyChooseSection />
+        </section>
+        <Separator className="mb-[8rem]" />
+       
+        {/* <Separator className="mb-[8rem]" /> */}
         <section id="add-traffic">
           <AddTrafficComponent />
         </section>

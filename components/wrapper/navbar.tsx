@@ -80,8 +80,8 @@ export default function NavBar() {
                                 </Link>
                             </DialogClose>
                             <DialogClose asChild>
-                                <Link href="/dashboard" legacyBehavior passHref className="cursor-pointer">
-                                    <Button variant="outline">
+                                <Link href="/dashboard">
+                                    <Button variant="outline" className="w-full">
                                         Dashboard
                                     </Button>
                                 </Link>
@@ -133,35 +133,35 @@ export default function NavBar() {
                         </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem className="max-[825px]:hidden">
-                        <Link href="/#pricing" legacyBehavior passHref>
+                        <Link href="/#pricing">
                             <Button variant="ghost">
                                 Pricing
                             </Button>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem className="max-[825px]:hidden">
-                        <Link href="/#faq" legacyBehavior passHref>
+                        <Link href="/#faq">
                             <Button variant="ghost">
                                 FAQ
                             </Button>
                         </Link>
                     </NavigationMenuItem>
                      <NavigationMenuItem className="max-[825px]:hidden">
-                        <Link href="/documentation" legacyBehavior passHref>
+                        <Link href="/documentation">
                             <Button variant="ghost">
                                 Docs
                             </Button>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem className="max-[825px]:hidden">
-                        <Link href="/contact-sales" legacyBehavior passHref>
+                        <Link href="/contact-sales">
                             <Button variant="ghost">
                                 Contact Sales
                             </Button>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem className="max-[825px]:hidden">
-                        <Link href="/partners" legacyBehavior passHref>
+                        <Link href="/partners">
                             <Button variant="ghost">
                                 Partners
                             </Button>
@@ -171,7 +171,7 @@ export default function NavBar() {
             </NavigationMenu>
             <div className="flex items-center gap-2 max-[825px]:hidden">
                 {userId && (
-                    <Link href="/dashboard" legacyBehavior passHref>
+                    <Link href="/dashboard">
                         <Button variant="ghost" size="sm">
                             Dashboard
                         </Button>

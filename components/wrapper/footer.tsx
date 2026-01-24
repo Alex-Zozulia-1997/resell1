@@ -1,7 +1,7 @@
 "use client"
 import { Button } from '../ui/button';
 import Link from 'next/link';
-import { Mail, Github, Twitter, Linkedin } from 'lucide-react';
+import { Mail, Send } from 'lucide-react';
 
 const Logo = () => {
   return (
@@ -28,14 +28,8 @@ export default function Footer() {
                             Premium residential proxy service with 195+ countries coverage and 99.9% uptime. Trusted by developers worldwide.
                         </p>
                         <div className="flex gap-3 mt-6">
-                            <a href={process.env.NEXT_PUBLIC_DISCORD_URL || '#'} target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                                <Twitter className="w-5 h-5" />
-                            </a>
-                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                                <Github className="w-5 h-5" />
-                            </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                                <Linkedin className="w-5 h-5" />
+                            <a href={process.env.NEXT_PUBLIC_TELEGRAM_URL || '#'} target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition" aria-label="Join our Telegram">
+                                <Send className="w-5 h-5" />
                             </a>
                         </div>
                     </div>

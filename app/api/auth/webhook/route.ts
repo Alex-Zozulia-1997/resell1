@@ -11,11 +11,14 @@ export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   console.log('=== Webhook Request Received ===');
+  console.log('Request URL:', req.url);
+  console.log('Request method:', req.method);
+  console.log('WEBHOOK_SECRET configured:', !!WEBHOOK_SECRET, WEBHOOK_SECRET?.substring(0, 10) + '...');
 
   if (!WEBHOOK_SECRET) {
     console.error('WEBHOOK_SECRET not configured');
     throw new Error(
-      'Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local'
+      'Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local'
     );
   }
 
@@ -82,7 +85,6 @@ export async function POST(req: Request) {
     password: string; // UUID or similar, 36 chars
     current_period_end: string; // "YYYY-MM-DD"
   }) => {
-    // Use your internal API route instead of calling Geonode directly
     const url = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/api/geonode/user/create`;
 
     try {
@@ -98,7 +100,7 @@ export async function POST(req: Request) {
         const text = await response.text();
         console.error('Create user failed:', response.status, text);
         throw new Error(
-          `Failed to create user: ${response.status} ${response.statusText} - ${text}`
+          `Failed to create proxy user: ${response.status} ${response.statusText} - ${text}`
         );
       }
 
@@ -122,6 +124,17 @@ export async function POST(req: Request) {
         const eventData: any = (evt as any).data || payload?.data;
         const userEmail = eventData?.email_addresses?.[0]?.email_address;
 
+        // Add validation
+        if (!userEmail) {
+          console.error('No email found in event data:', JSON.stringify(eventData));
+          return NextResponse.json({
+            status: 400,
+            message: 'No email found in webhook data',
+          });
+        }
+
+        console.log('Processing user creation for email:', userEmail);
+
         // Check if user already exists in Supabase
         const { createClient } = await import('@supabase/supabase-js');
         const supabase = createClient(
@@ -129,11 +142,16 @@ export async function POST(req: Request) {
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4dW54cmNrZ2RtbmF3Z3RqZHdqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Mzk5MjQwNSwiZXhwIjoyMDc5NTY4NDA1fQ.vpNYa2UPWt7cwcp2Ur2Qx6gf-DGChBzzNAHJv7AJ2So'
         );
 
-        const { data: existingUser } = await supabase
+        const { data: existingUser, error: checkError } = await supabase
           .from('user')
           .select('resid, email')
           .eq('email', userEmail)
-          .maybeSingle(); // Use maybeSingle() to handle 0 rows
+          .maybeSingle();
+
+        if (checkError) {
+          console.error('Error checking existing user:', checkError);
+          // Continue anyway, don't fail here
+        }
 
         if (existingUser?.resid) {
           console.log('User already exists with resID:', existingUser.resid);
@@ -144,29 +162,36 @@ export async function POST(req: Request) {
         }
 
         // Insert the initial user info
-        await userCreate({
-          email: userEmail,
-          first_name: eventData?.first_name,
-          last_name: eventData?.last_name,
-          profile_image_url: eventData?.profile_image_url,
-          user_id: eventData?.id,
-        });
-
-        console.log('User info inserted');
+        console.log('Attempting to create user in Supabase...');
+        try {
+          await userCreate({
+            email: userEmail,
+            first_name: eventData?.first_name,
+            last_name: eventData?.last_name,
+            profile_image_url: eventData?.profile_image_url,
+            user_id: eventData?.id,
+          });
+          console.log('User info inserted into Supabase successfully');
+        } catch (createError) {
+          console.error('Failed to create user in Supabase:', createError);
+          throw new Error(`Supabase userCreate failed: ${createError}`);
+        }
 
         // Prepare base data for API call
         const baseUserData = {
           email: eventData?.email_addresses?.[0]?.email_address,
           serviceType: 'RESIDENTIAL-PREMIUM',
-          traffic_limit: 1500,
-          password: uuidv4(), // UUID, 36 characters
-          current_period_end: '2026-12-31T23:59:59.000Z',
+          traffic_limit: 50,
+          password: uuidv4(), 
+          current_period_end: '2029-12-31T23:59:59.000Z',
         } as any;
 
         // Try creating subuser with retries on username collision
         let createResponse: any = null;
         let attempts = 0;
         const maxAttempts = 5;
+        let lastError: any = null;
+
         while (attempts < maxAttempts) {
           attempts += 1;
           const userData = {
@@ -177,8 +202,8 @@ export async function POST(req: Request) {
           console.log(
             'Attempting to create subuser on Geonode. Attempt:',
             attempts,
-            'body:',
-            JSON.stringify(userData)
+            'username:',
+            userData.username
           );
 
           try {
@@ -186,10 +211,10 @@ export async function POST(req: Request) {
             console.log('API Response:', createResponse);
             break; // success
           } catch (err: any) {
+            lastError = err;
             const msg = String(err?.message || err || '');
             console.error('Create attempt failed:', attempts, msg);
 
-            // If conflict due to username, retry with a new username
             if (
               msg.includes('username') ||
               msg.toLowerCase().includes('username')
@@ -198,21 +223,23 @@ export async function POST(req: Request) {
               continue;
             }
 
-            // If email already exists or other terminal error, abort
             if (msg.includes('Email already') || msg.toLowerCase().includes('email')) {
-              console.error('Email already exists on Geonode; aborting create');
+              console.error('Email already exists on proxy service; aborting create');
               break;
             }
 
-            // For other errors, abort and surface
             throw err;
           }
         }
 
-        const resId = createResponse?.data?.id;
-        console.log('User ID:', resId);
+        if (!createResponse && attempts >= maxAttempts) {
+          console.error('Failed to create user on Geonode after', maxAttempts, 'attempts');
+          throw new Error(`Failed to create proxy user after ${maxAttempts} attempts: ${lastError}`);
+        }
 
-        // Update the user table with the resId - use direct Supabase update
+        const resId = createResponse?.data?.id;
+        console.log('Geonode User ID (resId):', resId);
+
         if (resId) {
           const { error: updateError } = await supabase
             .from('user')
@@ -221,11 +248,13 @@ export async function POST(req: Request) {
 
           if (updateError) {
             console.error('Failed to update resid:', updateError);
+            throw new Error(`Failed to update proxy user ID in database: ${updateError.message}`);
           } else {
             console.log('resId updated successfully in user table');
           }
         } else {
-          console.warn('resID not found in API response');
+          console.warn('resID not found in API response - user may not have been created on Geonode');
+          throw new Error('Proxy user ID not found in API response');
         }
 
         return NextResponse.json({
@@ -234,9 +263,10 @@ export async function POST(req: Request) {
         });
       } catch (error) {
         console.error('Error handling user.created:', error);
+        console.error('Full error details:', JSON.stringify(error, null, 2));
         return NextResponse.json({
-          status: 400,
-          message: String(error),
+          status: 500,
+          message: `Failed to create user: ${error instanceof Error ? error.message : String(error)}`,
         });
       }
 

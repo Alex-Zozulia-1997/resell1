@@ -51,7 +51,7 @@ export default function ContactSales() {
 
   // Get contact info from environment variables
   const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'sales@ipden.io';
-  const discordUrl = process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/HUcHdrrDgY';
+  const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
 
   if (submitted) {
     return (
@@ -253,12 +253,12 @@ export default function ContactSales() {
               {contactEmail}
             </a>
             <a 
-              href={discordUrl} 
+              href={telegramUrl} 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
               <MessageSquare className="w-4 h-4" />
-              Join our Discord
+              Join our Telegram
             </a>
           </div>
         </div>

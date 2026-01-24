@@ -8,7 +8,11 @@ import CurlTest from './_components/curl-test';
 import UsernameCard from './_components/username';
 import PasswordCard from './_components/password';
 import EndpointBuild from './_components/endpoint-build';
-import { Globe, Zap, Clock, CheckCircle } from 'lucide-react';
+import { Globe, Zap, Clock, CheckCircle, Plus, CreditCard } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import axios from 'axios';
 
 interface UserData {
   usageBandwidth: number;
@@ -25,6 +29,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
 export default function Dashboard() {
   const { user } = useUser();
+  const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,6 +123,24 @@ export default function Dashboard() {
     fetchData();
   }, [user]);
 
+  const handleBillingPortal = async () => {
+    try {
+      const { data } = await axios.post('/api/payments/create-portal-session', {
+        userId: user?.id,
+        email: user?.emailAddresses?.[0]?.emailAddress,
+      });
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error('Failed to open billing portal');
+      }
+    } catch (error) {
+      console.error('Error opening billing portal:', error);
+      toast.error('Failed to open billing portal');
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -137,12 +160,28 @@ export default function Dashboard() {
               Monitor your proxy usage and manage your account
             </p>
           </div>
-          <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-            <CheckCircle className="w-8 h-8 text-green-600" />
-            <div>
-              <p className="text-xs text-gray-600 dark:text-gray-400">Status</p>
-              <p className="font-semibold text-green-600 dark:text-green-400">All Systems Operational</p>
-            </div>
+          <div className="hidden md:flex items-center gap-3">
+            <Button 
+              onClick={handleBillingPortal}
+              variant="outline"
+              className="flex items-center gap-2 px-4 py-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
+              <CreditCard className="w-5 h-5 text-blue-600" />
+              <div className="text-left">
+                <p className="text-xs text-gray-600 dark:text-gray-400">Manage</p>
+                <p className="font-semibold text-blue-600 dark:text-blue-400">Billing</p>
+              </div>
+            </Button>
+            <Button 
+              onClick={() => router.push('/addTraffic')}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <Plus className="w-5 h-5" />
+              <div className="text-left">
+                <p className="text-xs opacity-90">Buy More</p>
+                <p className="font-semibold">Add Traffic</p>
+              </div>
+            </Button>
           </div>
         </div>
       </div>

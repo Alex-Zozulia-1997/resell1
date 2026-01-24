@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import axios from 'axios';
+import TrafficStatistics from './_components/traffic-statistics';
 
 interface UserData {
   usageBandwidth: number;
@@ -22,6 +23,10 @@ interface UserData {
   sub_user_password?: string;
   password?: string;
   resID?: string;
+  authorization?: {
+    username: string;
+    password: string;
+  };
   // Add other properties as needed
 }
 
@@ -34,6 +39,10 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [traffic, setTraffic] = useState<number>(0);
+  const [dateRange, setDateRange] = useState({
+    from: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    to: new Date().toISOString(),
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -234,9 +243,19 @@ export default function Dashboard() {
           />
         </div>
         <div className="flex-1">
-          <BarChartBetter />
+          <BarChartBetter 
+            username={userData?.authorization?.username}
+            dateFrom={dateRange.from}
+            dateTo={dateRange.to}
+          />
         </div>
       </div>
+
+      {/* Traffic Statistics */}
+      <TrafficStatistics 
+        username={userData?.authorization?.username}
+        onDateRangeChange={(from, to) => setDateRange({ from, to })}
+      />
 
       {/* Proxy Configuration */}
       <EndpointBuild userData={userData} />

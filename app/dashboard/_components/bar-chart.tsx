@@ -26,7 +26,7 @@ export function GaugeChartComponent({
         <CardTitle>
           <div className="flex  justify-between">
             <p>Bandwidth </p>
-            <p className="">{total - used} GB left</p>
+            <p className="">{(total - used).toFixed(3)} GB left</p>
           </div>
         </CardTitle>
         <CardDescription></CardDescription>
@@ -52,7 +52,7 @@ export function GaugeChartComponent({
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          You have used {used} GB out of {total} GB{' '}
+          You have used {used.toFixed(3)} GB out of {total.toFixed(3)} GB{' '}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">

@@ -11,11 +11,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { amount, trafficGB, email } = await req.json();
+    const body = await req.json();
+    const { trafficGB, userId: reqUserId, email, amount } = body; // amount in USD
 
-    if (!amount || !trafficGB) {
+    console.log("🗋 Creating NOWPayments invoice:", { trafficGB, userId, email, amount });
+    console.log("🗋 Full request body:", body);
+
+    if (!trafficGB || !userId || !email || !amount) {
+      console.log("❌ NOWPayments validation failed:", { 
+        trafficGB: !!trafficGB, 
+        userId: !!userId, 
+        email: !!email, 
+        amount: !!amount
+      });
       return NextResponse.json(
-        { error: 'Missing required parameters' },
+        { error: 'Missing required fields: trafficGB, userId, email, or amount' },
         { status: 400 }
       );
     }
@@ -30,17 +40,21 @@ export async function POST(req: NextRequest) {
     }
 
     // Create payment invoice (allows user to choose cryptocurrency)
-    // For new accounts, consider adding specific currencies to avoid availability issues
     const paymentData: any = {
       price_amount: amount,
       price_currency: 'usd',
       order_id: `traffic_${userId}_${Date.now()}`,
-      order_description: `${trafficGB}GB Traffic Package`,
-      success_url: `${process.env.FRONTEND_URL}success?type=crypto`,
-      cancel_url: `${process.env.FRONTEND_URL}cancel?type=crypto`,
+      order_description: `${trafficGB}GB Residential Proxy Traffic`,
+      success_url: `${process.env.FRONTEND_URL}success?payment_type=crypto`,
+      cancel_url: `${process.env.FRONTEND_URL}cancel?payment_type=crypto`,
       ipn_callback_url: `${process.env.FRONTEND_URL}api/payments/nowpayments/webhook`,
-      // Uncomment to restrict to specific currencies for new accounts:
-      // pay_currency: 'btc', // or 'usdttrc20' for USDT
+      // Store metadata for webhook processing
+      metadata: {
+        userId,
+        trafficGB: trafficGB.toString(),
+        type: 'traffic_purchase',
+        email,
+      },
     };
 
     const response = await fetch(`${NOWPAYMENTS_API_URL}/invoice`, {

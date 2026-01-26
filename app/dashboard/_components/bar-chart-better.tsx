@@ -98,7 +98,7 @@ export function BarChartBetter({
 
   const formatBytes = (bytes: number | undefined): string => {
     if (!bytes || bytes === 0) return '0 B';
-    const k = 1024;
+    const k = 1000; // Use decimal units to match gauge chart
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`;

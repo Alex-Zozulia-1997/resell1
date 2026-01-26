@@ -39,6 +39,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [traffic, setTraffic] = useState<number>(0);
+  const [trafficLimit, setTrafficLimit] = useState<number>(0);
   const [dateRange, setDateRange] = useState({
     from: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
     to: new Date().toISOString(),
@@ -71,9 +72,21 @@ export default function Dashboard() {
               const trafficResponse = await fetch(`/api/geonode/user/traffic/${parsedData.resID}`);
               if (trafficResponse.ok) {
                 const trafficData = await trafficResponse.json();
+                console.log("🔍 DASHBOARD (cached): Traffic API response:", trafficData);
+                
                 const usageBandwidth = trafficData?.data?.usageBandwidth || 0;
-                const trafficInGB = usageBandwidth / 1000000000;
+                const trafficLimitInBytes = trafficData?.data?.trafficLimitInBytes || 0;
+                
+                console.log("🔍 DASHBOARD (cached): Usage bandwidth:", usageBandwidth);
+                
+                const trafficInGB = usageBandwidth / (1000 * 1000 * 1000);
+                const limitInGB = trafficLimitInBytes / (1000 * 1000 * 1000);
+                
+                console.log("🔍 DASHBOARD (cached): Traffic in GB:", trafficInGB);
+                console.log("🔍 DASHBOARD (cached): Limit in GB:", limitInGB);
+                
                 setTraffic(trafficInGB);
+                setTrafficLimit(limitInGB);
               }
             }
             
@@ -117,9 +130,27 @@ export default function Dashboard() {
           throw new Error(`Request failed: ${trafficResponse.status}`);
         const trafficData = await trafficResponse.json();
         
+        console.log("🔍 DASHBOARD: Traffic API response:", trafficData);
+        
         const usageBandwidth = trafficData?.data?.usageBandwidth || 0;
-        const trafficInGB = usageBandwidth / 1000000000;
+        const trafficLimitInBytes = trafficData?.data?.trafficLimitInBytes || 0;
+        
+        console.log("🔍 DASHBOARD: Raw values:", {
+          usageBandwidth,
+          trafficLimitInBytes
+        });
+        
+        // Convert bytes to GB (using 1000*1000*1000 for GB, not GiB)
+        const trafficInGB = usageBandwidth / (1000 * 1000 * 1000);
+        const limitInGB = trafficLimitInBytes / (1000 * 1000 * 1000);
+        
+        console.log("🔍 DASHBOARD: Converted values:", {
+          trafficInGB,
+          limitInGB
+        });
+        
         setTraffic(trafficInGB);
+        setTrafficLimit(limitInGB);
 
         setLoading(false);
       } catch (err) {
@@ -236,10 +267,8 @@ export default function Dashboard() {
       <div className="flex flex-col md:flex-row gap-2 w-full">
         <div className="w-full md:w-2/5">
           <GaugeChartComponent
-            used={Number(traffic.toFixed(2))}
-            total={Number(
-              userData?.traffic_limit ? userData?.traffic_limit / 1000 : 1
-            )}
+            used={traffic}
+            total={trafficLimit}
           />
         </div>
         <div className="flex-1">

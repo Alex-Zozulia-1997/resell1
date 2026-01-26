@@ -8,13 +8,13 @@ export async function GET(request: NextRequest) {
   const limit = searchParams.get('limit') || '100';
   const offset = searchParams.get('offset') || '0';
 
-  console.log('📊 Statistics API Request:', {
-    dateFrom,
-    dateTo,
-    subUserFilter,
-    limit,
-    offset,
-  });
+  // console.log('📊 Statistics API Request:', {
+  //   dateFrom,
+  //   dateTo,
+  //   subUserFilter,
+  //   limit,
+  //   offset,
+  // });
 
   if (!dateFrom || !dateTo || !subUserFilter) {
     console.error('❌ Missing required parameters:', { dateFrom, dateTo, subUserFilter });
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     granularity = 'day';
   }
 
-  console.log('📏 Calculated granularity:', { diffInHours, granularity });
+  // console.log('📏 Calculated granularity:', { diffInHours, granularity });
 
   const apiKey = process.env.GEONODE_API_KEY;
   if (!apiKey) {
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
  
   const url = `https://monitor.geonode.com/statistics/RESIDENTIAL-PREMIUM/per-subuser-host-country?granularity=${granularity}&dateFrom=${dateFrom}&dateTo=${dateTo}&subUserFilter=${subUserFilter}&limit=${limit}&offset=${offset}`;
 
-  console.log('🌐 Geonode Request URL:', url);
+  // console.log('🌐 Geonode Request URL:', url);
 
   try {
     const headers = {
@@ -60,14 +60,14 @@ export async function GET(request: NextRequest) {
       'r-api-key': apiKey,
     };
     
-    console.log('📤 Request headers:', {
-      'Content-Type': headers['Content-Type'],
-      'r-api-key': `${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 5)}`,
-    });
+    // console.log('📤 Request headers:', {
+    //   'Content-Type': headers['Content-Type'],
+    //   'r-api-key': `${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 5)}`,
+    // });
 
     const response = await fetch(url, { headers });
 
-    console.log('📡 Geonode Response Status:', response.status);
+    // console.log('📡 Geonode Response Status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -80,12 +80,12 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    console.log('✅ Geonode Response Data:', {
-      dateFrom: data.dateFrom,
-      dateTo: data.dateTo,
-      total: data.total,
-      documentsCount: data.documents?.length || 0,
-    });
+    // console.log('✅ Geonode Response Data:', {
+    //   dateFrom: data.dateFrom,
+    //   dateTo: data.dateTo,
+    //   total: data.total,
+    //   documentsCount: data.documents?.length || 0,
+    // });
 
     return NextResponse.json(data);
   } catch (error) {

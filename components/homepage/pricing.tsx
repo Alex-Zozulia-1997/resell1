@@ -193,26 +193,20 @@ export default function Pricing() {
     setStripePromise(loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!));
   }, []);
 
-  const handleCheckout = async (priceId: string, subscription: boolean) => {
+  const handleCheckout = async (traffic: number, price: number) => {
     try {
       const { data } = await axios.post(
         `/api/payments/create-checkout-session`,
         {
           userId: user?.id,
           email: user?.emailAddresses?.[0]?.emailAddress,
-          priceId,
-          subscription,
+          trafficGB: traffic,
+          amount: Math.round(price * 100), // Convert to cents
         }
       );
 
-      if (data.sessionId) {
-        const stripe = await stripePromise;
-
-        const response = await stripe?.redirectToCheckout({
-          sessionId: data.sessionId,
-        });
-
-        return response;
+      if (data.url) {
+        window.location.href = data.url;
       } else {
         console.error('Failed to create checkout session');
         toast('Failed to create checkout session');
@@ -341,10 +335,7 @@ export default function Pricing() {
                   className="bg-green-600 hover:bg-green-700 text-white px-8"
                   onClick={() => {
                     if (user?.id) {
-                      handleCheckout(
-                        process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_TRIAL!,
-                        true
-                      );
+                      handleCheckout(1, 0.99); // 1GB for $0.99
                     } else {
                       toast('Please login or sign up to purchase', {
                         description: 'You must be logged in to make a purchase',

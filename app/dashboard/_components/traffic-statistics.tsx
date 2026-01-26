@@ -79,7 +79,7 @@ export default function TrafficStatistics({ username, onDateRangeChange }: Traff
 
   useEffect(() => {
     const fetchStatistics = async () => {
-      console.log('🔍 [CLIENT] TrafficStatistics - Username:', username);
+      // console.log('🔍 [CLIENT] TrafficStatistics - Username:', username);
       
       if (!username) {
         console.log('⚠️ [CLIENT] No username provided');
@@ -94,16 +94,16 @@ export default function TrafficStatistics({ username, onDateRangeChange }: Traff
         
         const url = `/api/geonode/statistics?dateFrom=${dateFrom}&dateTo=${dateTo}&subUserFilter=${username}&limit=100&offset=0`;
         
-        console.log('📤 [CLIENT] Fetching statistics:', { 
-          dateFrom, 
-          dateTo, 
-          username,
-          fullUrl: url 
-        });
+        // console.log('📤 [CLIENT] Fetching statistics:', { 
+        //   dateFrom, 
+        //   dateTo, 
+        //   username,
+        //   fullUrl: url 
+        // });
         
         const response = await fetch(url);
 
-        console.log('📥 [CLIENT] Response status:', response.status);
+        // console.log('📥 [CLIENT] Response status:', response.status);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
@@ -112,11 +112,11 @@ export default function TrafficStatistics({ username, onDateRangeChange }: Traff
         }
 
         const result = await response.json();
-        console.log('✅ [CLIENT] Statistics result:', {
-          total: result.total,
-          documentsCount: result.documents?.length,
-          fullData: result
-        });
+        // console.log('✅ [CLIENT] Statistics result:', {
+        //   total: result.total,
+        //   documentsCount: result.documents?.length,
+        //   fullData: result
+        // });
         setData(result);
       } catch (err) {
         console.error('💥 [CLIENT] Error fetching statistics:', err);
@@ -343,7 +343,7 @@ export default function TrafficStatistics({ username, onDateRangeChange }: Traff
               {/* Top Hosts Table */}
               <div>
                 <h3 className="text-lg font-semibold mb-3">Top Targets by Traffic</h3>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto max-h-72 overflow-y-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-100 dark:bg-gray-800">
                       <tr>

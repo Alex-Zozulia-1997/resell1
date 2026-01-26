@@ -9,8 +9,9 @@ import {
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import countries from 'world-countries';
-import { Copy } from 'lucide-react';
+import { Copy, Download } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 const countryOptions = countries.map((country) => ({
   value: country.cca2.toLowerCase(),
@@ -28,6 +29,12 @@ const typeOptions = [
   { value: 'rotating', label: 'Rotating (Request)' },
 ];
 
+const formatOptions = [
+  { value: 'login:password@host:port', label: 'login:password@host:port' },
+  { value: 'login:password:host:port', label: 'login:password:host:port' },
+  { value: 'protocol://login:password@host:port', label: 'protocol://login:password@host:port' },
+];
+
 interface EndpointBuildProps {
   userData?: any;
 }
@@ -43,7 +50,7 @@ const generateSessionId = (length: number = 12): string => {
 };
 
 export default function EndpointBuild({ userData }: EndpointBuildProps) {
-  const [country, setCountry] = useState<any>({ value: 'us', label: 'United States' });
+  const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<string>('georgia');
   const [city, setCity] = useState<string>('atlanta');
   const [proxyType, setProxyType] = useState<any>(typeOptions[1]);
@@ -53,6 +60,9 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
   const [sessionId, setSessionId] = useState<string>(generateSessionId());
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [format, setFormat] = useState<any>(formatOptions[2]);
+  const [quantity, setQuantity] = useState<number>(10);
+  const [generatedProxies, setGeneratedProxies] = useState<string[]>([]);
 
   // Use environment variable with fallback
   const proxyHost = process.env.NEXT_PUBLIC_PROXY_HOST || 'proxy.ipden.io';
@@ -107,27 +117,67 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
     }
   }, [userData]);
 
+  // Auto-generate proxies whenever configuration changes
+  useEffect(() => {
+    if (!username || !password || !port) {
+      setGeneratedProxies([]);
+      return;
+    }
+
+    const proxies: string[] = [];
+    for (let i = 0; i < quantity; i++) {
+      const sessionIdForProxy = proxyType.value === 'sticky' ? generateSessionId() : '';
+      
+      let usernameForProxy = username;
+      if (country && country.value) {
+        usernameForProxy += `-country-${country.value}`;
+      }
+      if (state && state.trim()) {
+        usernameForProxy += `-state-${state.toLowerCase().replace(/\s+/g, '-')}`;
+      }
+      if (city && city.trim()) {
+        usernameForProxy += `-city-${city.toLowerCase().replace(/\s+/g, '-')}`;
+      }
+      if (proxyType.value === 'sticky' && sessionIdForProxy) {
+        usernameForProxy += `-session-${sessionIdForProxy}`;
+        usernameForProxy += `-lifetime-${sessionLifetime}`;
+      }
+
+      const proxyString = generateProxyFormat(
+        usernameForProxy,
+        password,
+        proxyHost,
+        port,
+        protocol.value,
+        format.value
+      );
+      proxies.push(proxyString);
+    }
+
+    setGeneratedProxies(proxies);
+  }, [username, password, port, quantity, country, state, city, proxyType, protocol, format, sessionLifetime, proxyHost]);
+
   // Construct username with parameters
   const constructUsername = () => {
     if (!username) return 'username';
     
     let params: string[] = [username];
     
-    if (country) {
+    if (country && country.value) {
       params.push(`country-${country.value}`);
     }
     
-    if (state) {
+    if (state && state.trim()) {
       params.push(`state-${state.toLowerCase().replace(/\s+/g, '-')}`);
     }
     
-    if (city) {
+    if (city && city.trim()) {
       params.push(`city-${city.toLowerCase().replace(/\s+/g, '-')}`);
     }
     
     // Only add session parameters if sticky/session type is selected
     if (proxyType.value === 'sticky') {
-      params.push(`sessionId-${sessionId}`);
+      params.push(`session-${sessionId}`);
       params.push(`lifetime-${sessionLifetime}`);
     }
     
@@ -163,11 +213,51 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
     toast.success('Session ID regenerated!');
   };
 
+  const generateProxyFormat = (username: string, password: string, host: string, port: number, protocol: string, format: string): string => {
+    switch (format) {
+      case 'login:password@host:port':
+        return `${username}:${password}@${host}:${port}`;
+      case 'login:password:host:port':
+        return `${username}:${password}:${host}:${port}`;
+      case 'protocol://login:password@host:port':
+        return `${protocol}://${username}:${password}@${host}:${port}`;
+      default:
+        return `${protocol}://${username}:${password}@${host}:${port}`;
+    }
+  };
+
+  const copyProxiesToClipboard = () => {
+    if (generatedProxies.length === 0) {
+      toast.error('No proxies generated yet');
+      return;
+    }
+    navigator.clipboard.writeText(generatedProxies.join('\n'));
+    toast.success(`Copied ${generatedProxies.length} proxy endpoint${generatedProxies.length > 1 ? 's' : ''} to clipboard!`);
+  };
+
+  const downloadProxies = () => {
+    if (generatedProxies.length === 0) {
+      toast.error('No proxies generated yet');
+      return;
+    }
+
+    const blob = new Blob([generatedProxies.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `proxies-${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success('Proxy list downloaded!');
+  };
+
   return (
     <div className="w-full p-4">
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Proxy Configuration</CardTitle>
+          <CardTitle className="text-2xl font-bold">Proxy Configuration & Export</CardTitle>
           {!userData && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
               Loading credentials...
@@ -181,6 +271,7 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
                 options={countryOptions}
                 placeholder="Select country"
                 isSearchable
+                isClearable
                 value={country}
                 onChange={setCountry}
                 styles={{
@@ -379,11 +470,7 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
                   <code className="block p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 overflow-x-auto font-mono">
                     {curlCommand}
                   </code>
-                  <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/30 rounded-lg">
-                    <p className="text-xs text-green-700 dark:text-green-300">
-                      <strong>Expected response:</strong> This will return a JSON object with your proxy&apos;s IP address if the connection is successful.
-                    </p>
-                  </div>
+                 
                 </CardContent>
               </Card>
             </div>
@@ -441,6 +528,105 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
               </code>
             </div>
           </div>
+
+          {/* Proxy List Generator Section - Always Visible */}
+          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-lg">
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+              Export Proxy List
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                  Format
+                </label>
+                <Select
+                  options={formatOptions}
+                  value={format}
+                  onChange={setFormat}
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      backgroundColor: '#1f2937',
+                      borderColor: '#374151',
+                      minHeight: '42px',
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      backgroundColor: '#1f2937',
+                    }),
+                    option: (base, state) => ({
+                      ...base,
+                      backgroundColor: state.isFocused ? '#374151' : '#1f2937',
+                      color: '#e5e7eb',
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      color: '#e5e7eb',
+                    }),
+                  }}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="1000"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.min(1000, Math.max(1, parseInt(e.target.value) || 1)))}
+                  className="w-full h-[42px] px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            {generatedProxies.length > 0 && (
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    Generated Proxies ({generatedProxies.length})
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={copyProxiesToClipboard}
+                      className="flex items-center gap-2 px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
+                    >
+                      <Copy size={14} />
+                      Copy All
+                    </button>
+                    <button
+                      onClick={downloadProxies}
+                      className="flex items-center gap-2 px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded transition-colors"
+                    >
+                      <Download size={14} />
+                      Download
+                    </button>
+                  </div>
+                </div>
+                <div className="max-h-64 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded p-3">
+                  {generatedProxies.map((proxy, index) => (
+                    <div
+                      key={index}
+                      className="font-mono text-xs text-gray-900 dark:text-gray-200 py-1 border-b border-gray-200 dark:border-gray-700 last:border-0"
+                    >
+                      {proxy}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {generatedProxies.length === 0 && (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                Configure all required fields to generate proxy list
+              </div>
+            )}
+          </div>
+
+          {/* ...existing cURL test section... */}
         </CardContent>
       </Card>
     </div>

@@ -61,19 +61,13 @@ export default function AddTrafficComponent() {
         {
           userId: user.id,
           email: user.emailAddresses?.[0]?.emailAddress,
-          priceId: priceId || undefined,
-          subscription: false,
-          // For custom amounts, pass the amount and traffic GB
-          customAmount: !priceId ? totalPrice : undefined,
           trafficGB: trafficAmount,
+          amount: Math.round(totalPrice * 100), // Convert to cents
         }
       );
 
-      if (data.sessionId) {
-        const stripe = await stripePromise;
-        await stripe?.redirectToCheckout({
-          sessionId: data.sessionId,
-        });
+      if (data.url) {
+        window.location.href = data.url;
       } else {
         toast.error('Failed to create checkout session');
       }

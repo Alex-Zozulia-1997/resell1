@@ -213,7 +213,7 @@ export default function Dashboard() {
               </div>
             </Button>
             <Button 
-              onClick={() => router.push('/addTraffic')}
+              onClick={() => router.push('/dashboard/addTraffic')}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white"
             >
               <Plus className="w-5 h-5" />

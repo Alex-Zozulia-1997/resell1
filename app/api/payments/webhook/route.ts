@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { encodeEmail } from '@/lib/email-encoding';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -333,7 +334,8 @@ async function addTrafficToUser(email: string, trafficGB: number, supabase: any)
   try {
     console.log("📊 TRAFFIC HANDLER: Starting traffic addition process");
     console.log("📊 TRAFFIC HANDLER: Email:", email);
-    console.log("📊 TRAFFIC HANDLER: Traffic to add:", trafficGB, "GB");
+    console.log("� TRAFFIC HANDLER: Using encoded email for Geonode privacy:", encodeEmail(email));
+    console.log("�📊 TRAFFIC HANDLER: Traffic to add:", trafficGB, "GB");
 
     // 1. Get user's resID from database
     console.log("📊 TRAFFIC HANDLER: Looking up user resID in database");

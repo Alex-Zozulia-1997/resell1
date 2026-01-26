@@ -4,6 +4,7 @@ import DashboardTopNav from './_components/dashbord-top-nav';
 import { isAuthorized } from '@/utils/data/user/isAuthorized';
 import { redirect } from 'next/dist/server/api-utils';
 import { currentUser } from '@clerk/nextjs/server';
+import Footer from '@/components/wrapper/footer';
 
 export default async function DashboardLayout({
   children,
@@ -16,11 +17,14 @@ export default async function DashboardLayout({
     console.log('authorized check fired');
   }
   return (
-    <div className="grid min-h-screen w-screen lg:grid-cols-[280px_1fr]">
-      <DashboardSideBar />
-      <DashboardTopNav>
-        <main className="flex flex-col gap-4 p-2   lg:gap-">{children}</main>
-      </DashboardTopNav>
+    <div className="min-h-screen w-screen">
+      <div className="grid lg:grid-cols-[280px_1fr]">
+        <DashboardSideBar />
+        <DashboardTopNav>
+          <main className="flex flex-col gap-4 p-2 lg:gap-">{children}</main>
+        </DashboardTopNav>
+      </div>
+      <Footer />
     </div>
   );
 }

@@ -155,7 +155,7 @@ const PricingCard = ({
         <Button
           onClick={() => {
             if (user?.id) {
-              handleCheckout(isYearly ? priceIdYearly : priceIdMonthly, true);
+              handleCheckout(traffic || 0, monthlyPrice || 0);
             } else {
               toast('Please login or sign up to purchase', {
                 description: 'You must be logged in to make a purchase',

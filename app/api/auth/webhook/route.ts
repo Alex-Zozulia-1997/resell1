@@ -6,6 +6,7 @@ import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { v4 as uuidv4 } from 'uuid';
+import { encodeEmail, createEmailMapping } from '@/lib/email-encoding';
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -178,8 +179,15 @@ export async function POST(req: Request) {
         }
 
         // Prepare base data for API call
+        const originalEmail = eventData?.email_addresses?.[0]?.email_address;
+        const encodedEmail = encodeEmail(originalEmail);
+        
+        // Create email mapping for future reference
+        const emailMapping = createEmailMapping(originalEmail, encodedEmail);
+        console.log('📧 EMAIL ENCODING: Created mapping:', { original: originalEmail, encoded: encodedEmail });
+        
         const baseUserData = {
-          email: eventData?.email_addresses?.[0]?.email_address,
+          email: encodedEmail, // Use encoded email for Geonode
           serviceType: 'RESIDENTIAL-PREMIUM',
           traffic_limit: 50,
           password: uuidv4(), 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { encodeEmail } from '@/lib/email-encoding';
 
 const NOWPAYMENTS_API_URL = 'https://api.nowpayments.io/v1';
 
@@ -10,7 +11,8 @@ async function addTrafficToUser(email: string, trafficGB: number, supabase: any)
   try {
     console.log("📊 CRYPTO TRAFFIC HANDLER: Starting traffic addition process");
     console.log("📊 CRYPTO TRAFFIC HANDLER: Email:", email);
-    console.log("📊 CRYPTO TRAFFIC HANDLER: Traffic to add:", trafficGB, "GB");
+    console.log("� CRYPTO TRAFFIC HANDLER: Using encoded email for Geonode privacy:", encodeEmail(email));
+    console.log("�📊 CRYPTO TRAFFIC HANDLER: Traffic to add:", trafficGB, "GB");
 
     // 1. Get user's resID from database
     console.log("📊 CRYPTO TRAFFIC HANDLER: Looking up user resID in database");

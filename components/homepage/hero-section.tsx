@@ -1,8 +1,14 @@
+'use client';
+
 import { ArrowRight, CheckCircle2, Globe, Zap, Shield, Users } from 'lucide-react';
 import Link from 'next/link';
 import { BorderBeam } from '../magicui/border-beam';
 import { Button } from '../ui/button';
 import Image from 'next/image';
+import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import axios from 'axios';
 
 const Logo = ({
   textSize = 'text-xl',
@@ -23,6 +29,58 @@ const Logo = ({
 };
 
 export default function HeroSection() {
+  const { user } = useUser();
+  const router = useRouter();
+
+  const handleTrialCheckout = async () => {
+    if (!user?.id) {
+      toast('Please login or sign up to purchase', {
+        description: 'You must be logged in to start the trial',
+        action: {
+          label: 'Sign Up',
+          onClick: () => router.push('/sign-up'),
+        },
+      });
+      return;
+    }
+
+    try {
+      // Check if user has already used their trial
+      const { data: existingTrial } = await axios.get(`/api/payments/check-trial?email=${encodeURIComponent(user.emailAddresses?.[0]?.emailAddress || '')}`);
+      
+      if (existingTrial?.hasUsedTrial) {
+        toast('Trial already used', {
+          description: 'You have already used your $1 trial. Please purchase a regular plan.',
+          action: {
+            label: 'Buy Custom Amount',
+            onClick: () => router.push('/dashboard/addTraffic'),
+          },
+        });
+        return;
+      }
+
+      const { data } = await axios.post(
+        `/api/payments/create-checkout-session`,
+        {
+          userId: user.id,
+          email: user.emailAddresses?.[0]?.emailAddress,
+          trafficGB: 1,
+          amount: 100, // $1.00 in cents
+        }
+      );
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('Failed to create checkout session');
+        toast('Failed to create checkout session');
+      }
+    } catch (error) {
+      console.error('Error during checkout:', error);
+      toast('Error during checkout');
+    }
+  };
+
 const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
   return (
     <section
@@ -51,11 +109,14 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>
-          <Link href="/free-proxies">
-            <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
-              Try Proxies for 1$
-            </Button>
-          </Link>
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="px-8 py-6 text-lg"
+            onClick={handleTrialCheckout}
+          >
+            Try Proxies for $1
+          </Button>
         </div>
 
         {/* Trust Indicators */}

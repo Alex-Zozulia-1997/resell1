@@ -1,9 +1,15 @@
+'use client';
+
 import { Globe, Zap, Shield, MapPin, Clock, CheckCircle2, TrendingUp, Users } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Pricing from '@/components/homepage/pricing';
 import UseCases from '@/components/homepage/use-cases';
+import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import axios from 'axios';
 
 const Logo = ({ textSize = 'text-xl', roundness = 'rounded-lg' }) => {
   return (
@@ -19,21 +25,73 @@ const Logo = ({ textSize = 'text-xl', roundness = 'rounded-lg' }) => {
 };
 
 const popularCountries = [
-  { code: 'US', name: 'United States', flag: '🇺🇸', cities: '500+' },
-  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧', cities: '150+' },
-  { code: 'DE', name: 'Germany', flag: '🇩🇪', cities: '200+' },
-  { code: 'FR', name: 'France', flag: '🇫🇷', cities: '180+' },
-  { code: 'CA', name: 'Canada', flag: '🇨🇦', cities: '120+' },
-  { code: 'AU', name: 'Australia', flag: '🇦🇺', cities: '100+' },
-  { code: 'JP', name: 'Japan', flag: '🇯🇵', cities: '150+' },
-  { code: 'BR', name: 'Brazil', flag: '🇧🇷', cities: '200+' },
-  { code: 'IN', name: 'India', flag: '🇮🇳', cities: '300+' },
-  { code: 'IT', name: 'Italy', flag: '🇮🇹', cities: '140+' },
-  { code: 'ES', name: 'Spain', flag: '🇪🇸', cities: '130+' },
-  { code: 'NL', name: 'Netherlands', flag: '🇳🇱', cities: '80+' },
+  { code: 'US', name: 'United States', flag: '🇺🇸', proxies: '9.8M' },
+  { code: 'RU', name: 'Russia', flag: '🇷🇺', proxies: '1.8M' },
+  { code: 'NG', name: 'Nigeria', flag: '🇳🇬', proxies: '1.6M' },
+  { code: 'DE', name: 'Germany', flag: '🇩🇪', proxies: '828K' },
+  { code: 'BR', name: 'Brazil', flag: '🇧🇷', proxies: '772K' },
+  { code: 'ID', name: 'Indonesia', flag: '🇮🇩', proxies: '423K' },
+  { code: 'UA', name: 'Ukraine', flag: '🇺🇦', proxies: '366K' },
+  { code: 'CA', name: 'Canada', flag: '🇨🇦', proxies: '195K' },
+  { code: 'IN', name: 'India', flag: '🇮🇳', proxies: '188K' },
+  { code: 'PH', name: 'Philippines', flag: '🇵🇭', proxies: '176K' },
+  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧', proxies: '150K' },
+  { code: 'FR', name: 'France', flag: '🇫🇷', proxies: '140K' },
 ];
 
 export default function ResidentialProxies() {
+  const { user } = useUser();
+  const router = useRouter();
+
+  const handleTrialCheckout = async () => {
+    if (!user?.id) {
+      toast('Please login or sign up to purchase', {
+        description: 'You must be logged in to start the trial',
+        action: {
+          label: 'Sign Up',
+          onClick: () => router.push('/sign-up'),
+        },
+      });
+      return;
+    }
+
+    try {
+      // Check if user has already used their trial
+      const { data: existingTrial } = await axios.get(`/api/payments/check-trial?email=${encodeURIComponent(user.emailAddresses?.[0]?.emailAddress || '')}`);
+      
+      if (existingTrial?.hasUsedTrial) {
+        toast('Trial already used', {
+          description: 'You have already used your $1 trial. Please purchase a regular plan.',
+          action: {
+            label: 'Buy Custom Amount',
+            onClick: () => router.push('/dashboard/addTraffic'),
+          },
+        });
+        return;
+      }
+
+      const { data } = await axios.post(
+        `/api/payments/create-checkout-session`,
+        {
+          userId: user.id,
+          email: user.emailAddresses?.[0]?.emailAddress,
+          trafficGB: 1,
+          amount: 100, // $1.00 in cents
+        }
+      );
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('Failed to create checkout session');
+        toast('Failed to create checkout session');
+      }
+    } catch (error) {
+      console.error('Error during checkout:', error);
+      toast('Error during checkout');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-black">
       {/* Hero Section */}
@@ -49,11 +107,13 @@ export default function ResidentialProxies() {
             Premium residential IP addresses from real devices in 195+ countries. Enjoy 99.9% uptime, unlimited concurrent sessions, and blazing-fast speeds.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
-                Get Started
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg"
+              onClick={handleTrialCheckout}
+            >
+              Get Started
+            </Button>
             <Link href="#pricing">
               <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
                 View Pricing
@@ -176,7 +236,7 @@ export default function ResidentialProxies() {
             Popular Countries & Regions
           </h2>
           <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
-            Access residential IPs from the most popular countries with extensive city coverage
+            Access residential IPs from the most popular countries with millions of available proxies
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {popularCountries.map((country) => (
@@ -186,7 +246,7 @@ export default function ResidentialProxies() {
                     <div className="text-4xl mb-2">{country.flag}</div>
                     <h3 className="font-semibold mb-1">{country.name}</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {country.cities} cities
+                      {country.proxies} proxies
                     </p>
                   </div>
                 </CardContent>
@@ -314,11 +374,13 @@ export default function ResidentialProxies() {
             Start with our $0.99 trial and experience the power of premium residential proxies
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
-                Start 1$ Trial
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg"
+              onClick={handleTrialCheckout}
+            >
+              Start $1 Trial
+            </Button>
             <Link href="/contact-sales">
               <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
                 Contact Sales

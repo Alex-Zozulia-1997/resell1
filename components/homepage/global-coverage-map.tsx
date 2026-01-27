@@ -499,20 +499,20 @@ export default function GlobalCoverageMap() {
   });
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
-  // Country ISO to flag mapping
+  // Country ISO to flag mapping (using emoji flags)
   const countryIsoToFlag: Record<string, string> = {
-    US: '/flags/us.svg',
-    CN: '/flags/china.svg',
-    GB: '/flags/uk.svg',
-    DE: '/flags/de.svg',
-    FR: '/flags/fr.svg',
-    JP: '/flags/jp.svg',
-    IN: '/flags/in.svg',
-    BR: '/flags/br.svg',
-    CA: '/flags/canada.svg',
-    KR: '/flags/korea.svg',
-    VN: '/flags/vn.svg',
-    UA: '/flags/ua.svg',
+    US: '🇺🇸', CN: '🇨🇳', GB: '🇬🇧', DE: '🇩🇪', FR: '🇫🇷', JP: '🇯🇵', IN: '🇮🇳', BR: '🇧🇷', 
+    CA: '🇨🇦', KR: '🇰🇷', VN: '🇻🇳', UA: '🇺🇦', RU: '🇷🇺', NG: '🇳🇬', ID: '🇮🇩', PH: '🇵🇭', 
+    NL: '🇳🇱', PL: '🇵🇱', MX: '🇲🇽', PK: '🇵🇰', TR: '🇹🇷', ES: '🇪🇸', KZ: '🇰🇿', TH: '🇹🇭', 
+    IT: '🇮🇹', CL: '🇨🇱', AU: '🇦🇺', SG: '🇸🇬', EC: '🇪🇨', PE: '🇵🇪', MY: '🇲🇾', AR: '🇦🇷', 
+    CO: '🇨🇴', SA: '🇸🇦', AZ: '🇦🇿', AE: '🇦🇪', BY: '🇧🇾', HK: '🇭🇰', MA: '🇲🇦', DZ: '🇩🇿', 
+    TW: '🇹🇼', UZ: '🇺🇿', CH: '🇨🇭', VE: '🇻🇪', ZA: '🇿🇦', SE: '🇸🇪', BG: '🇧🇬', IE: '🇮🇪', 
+    IQ: '🇮🇶', FI: '🇫🇮', DO: '🇩🇴', EG: '🇪🇬', PT: '🇵🇹', KG: '🇰🇬', BE: '🇧🇪', BO: '🇧🇴', 
+    RO: '🇷🇴', IL: '🇮🇱', BD: '🇧🇩', CZ: '🇨🇿', LT: '🇱🇹', LV: '🇱🇻', AT: '🇦🇹', NP: '🇳🇵', 
+    NZ: '🇳🇿', NO: '🇳🇴', AM: '🇦🇲', GT: '🇬🇹', MD: '🇲🇩', BH: '🇧🇭', JO: '🇯🇴', GR: '🇬🇷', 
+    HR: '🇭🇷', SV: '🇸🇻', CR: '🇨🇷', KW: '🇰🇼', EE: '🇪🇪', PA: '🇵🇦', HU: '🇭🇺', AL: '🇦🇱', 
+    KE: '🇰🇪', SK: '🇸🇰', UY: '🇺🇾', RS: '🇷🇸', GE: '🇬🇪', PY: '🇵🇾', TN: '🇹🇳', KH: '🇰🇭', 
+    CI: '🇨🇮', OM: '🇴🇲', DK: '🇩🇰', SN: '🇸🇳',
   };
 
   // Function to get flag or fallback
@@ -798,13 +798,9 @@ export default function GlobalCoverageMap() {
                       {index + 1}
                     </div>
                     {getFlagForCountry(country.iso) ? (
-                      <Image
-                        src={getFlagForCountry(country.iso)!}
-                        alt={`${country.name} flag`}
-                        width={20}
-                        height={15}
-                        className="rounded-sm"
-                      />
+                      <div className="text-lg">
+                        {getFlagForCountry(country.iso)!}
+                      </div>
                     ) : (
                       <div className="w-5 h-4 rounded-sm bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                         <Globe2 className="w-3 h-3 text-gray-500" />

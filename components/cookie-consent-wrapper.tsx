@@ -8,13 +8,23 @@ export default function CookieConsentWrapper() {
       location="bottom"
       buttonText="Accept All Cookies"
       cookieName="IPdenCookieConsent"
-      style={{ background: "#2B373B" }}
+      style={{ 
+        background: "#2B373B",
+        flexDirection: "row-reverse",
+        alignItems: "center"
+      }}
       buttonStyle={{ 
         color: "#4e503b", 
         backgroundColor: "#fff", 
         fontSize: "13px", 
         borderRadius: "4px", 
-        padding: "10px 20px" 
+        padding: "10px 20px",
+        marginRight: "20px",
+        marginLeft: "0px"
+      }}
+      contentStyle={{
+        flex: "1 0 300px",
+        margin: "0px"
       }}
       expires={150}
     >

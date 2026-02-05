@@ -16,7 +16,7 @@ export function AccordionComponent() {
                 <AccordionItem value="item-1">
                     <AccordionTrigger><span className="font-medium">Can I get a trial before making a larger purchase?</span></AccordionTrigger>
                     <AccordionContent>
-                        <p>While we don&apos;t offer a free trial, you can start with just 1 GB of bandwidth to explore our proxy solutions. It&apos;s a flexible way to experience the platform before selecting a larger plan — which comes with tiered discounts for higher volumes.</p>
+                        <p> Upon your registration you will get 50 MB of bandwidth for free you can start with just 1 GB for 1 USD to explore our proxy solutions. It&apos;s a flexible way to experience the platform before selecting a larger plan — which comes with tiered discounts for higher volumes.</p>
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">
@@ -40,12 +40,8 @@ export function AccordionComponent() {
                 <AccordionItem value="item-4">
                     <AccordionTrigger><span className="font-medium">What type of proxy solutions does IPden offer?</span></AccordionTrigger>
                     <AccordionContent>
-                        <p>IPden offers a comprehensive range of proxy solutions to meet your needs:</p>
-                        <ul className="list-disc list-inside mt-2 space-y-1">
-                            <li><strong>Residential proxies</strong> - Real IP addresses from residential devices</li>
-                            <li><strong>Datacenter proxies</strong> - High-speed proxies from data centers</li>
-                            <li><strong>ISP proxies</strong> - Static residential proxies for maximum reliability</li>
-                        </ul>
+                        <p>At the moment, IPden offers only rotating and sticky residential proxies:</p>
+                      
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-5">
@@ -82,8 +78,8 @@ export function AccordionComponent() {
                 <AccordionItem value="item-9">
                     <AccordionTrigger><span className="font-medium">Is there a refund policy?</span></AccordionTrigger>
                     <AccordionContent>
-                        <p>Yes, we offer a satisfaction guarantee. If you experience technical issues or the service doesn&apos;t meet your expectations, please contact our support team within 7 days of purchase to discuss refund options.</p>
-                        <p className="mt-2">Refunds are evaluated on a case-by-case basis. Unused bandwidth may be eligible for refund.</p>
+                        <p>No, we do not offer refunds on purchased bandwidth plans. All sales are final.</p>
+                        <p className="mt-2">We recommend starting with our $1 trial to test the service before purchasing larger packages.</p>
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-10">

@@ -6,24 +6,7 @@ import { Banknote, Folder, HomeIcon, Settings, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaTasks } from 'react-icons/fa';
-
-const Logo = ({
-  textSize = 'text-xl',
-  roundness = 'rounded-lg',
-}) => {
-  return (
-    <div
-      className={`flex items-center justify-center w-auto bg-gray-200 ${roundness} pl-2 pr-1 py-1`}>
-      <span
-        className={`${textSize} font-bold text-gray-100 bg-gray-900 rounded pl-1 pr-[2px] tracking-widest`}>
-        IP
-      </span>
-      <span className={`${textSize} font-bold text-gray-800 pl-[2px]`}>
-        den
-      </span>
-    </div>
-  );
-};
+import Logo from '@/components/Logo';
 
 export default function DashboardSideBar() {
   const pathname = usePathname();

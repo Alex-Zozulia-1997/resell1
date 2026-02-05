@@ -7,19 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Mail, Phone, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-
-const Logo = ({ textSize = 'text-xl', roundness = 'rounded-lg' }) => {
-  return (
-    <div className={`flex items-center justify-center w-auto bg-gray-200 dark:bg-gray-800 ${roundness} pl-2 pr-1 py-1`}>
-      <span className={`${textSize} font-bold text-gray-100 bg-gray-900 dark:bg-white dark:text-gray-900 rounded pl-1 pr-[2px] tracking-widest`}>
-        IP
-      </span>
-      <span className={`${textSize} font-bold text-gray-800 dark:text-gray-200 pl-[2px]`}>
-        den
-      </span>
-    </div>
-  );
-};
+import Logo from '@/components/Logo';
 
 export default function ContactSales() {
   const [loading, setLoading] = useState(false);

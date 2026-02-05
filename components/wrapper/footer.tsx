@@ -2,19 +2,7 @@
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { Mail, Send } from 'lucide-react';
-
-const Logo = () => {
-  return (
-    <div className="flex items-center justify-center w-auto bg-gray-200 dark:bg-gray-800 rounded-lg pl-2 pr-1 py-1">
-      <span className="text-xl font-bold text-gray-100 bg-gray-900 dark:bg-white dark:text-gray-900 rounded pl-1 pr-[2px] tracking-widest">
-        IP
-      </span>
-      <span className="text-xl font-bold text-gray-800 dark:text-gray-200 pl-[2px]">
-        den
-      </span>
-    </div>
-  );
-};
+import Logo from '@/components/Logo';
 
 export default function Footer() {
     return (
@@ -108,7 +96,7 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@ipden.io'}`} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center gap-2">
+                                <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'contact@ipden.io'}`} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center gap-2">
                                     <Mail className="w-4 h-4" />
                                     Support
                                 </a>

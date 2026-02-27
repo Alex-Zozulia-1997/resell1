@@ -86,7 +86,7 @@ export default function ResidentialProxies() {
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex justify-center mb-6">
-            <Logo textSize="text-4xl" roundness="rounded-xl" />
+            <Logo  roundness="rounded-xl" />
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             Residential Proxies

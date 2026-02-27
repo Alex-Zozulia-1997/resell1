@@ -7,7 +7,7 @@ import {
   Geography,
 } from 'react-simple-maps';
 import { scaleLinear } from 'd3-scale';
-import { interpolateGreens } from 'd3-scale-chromatic';
+import { interpolate } from 'd3-interpolate';
 import { TITLE_TAILWIND_CLASS } from '@/utils/constants';
 import Image from 'next/image';
 import { Card } from '@/components/ui/card';
@@ -21,14 +21,14 @@ const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 // Dummy dataset: Country ISO codes with IP counts
 const countryIpData: Record<string, number> = {
   US: 9776304,
-  RU: 1779498,
+  RU: 3779498,
   NG: 1588914,
-  DE: 828342,
+  DE: 7028342,
   BR: 771588,
   ID: 422811,
-  UA: 366372,
+  UA: 966372,
   CA: 195210,
-  IN: 187632,
+  IN: 1187632,
   PH: 175815,
   GB: 162720,
   NL: 135981,
@@ -209,16 +209,16 @@ const countryIpData: Record<string, number> = {
   PF: 5,
   GL: 23,
   LR: 18,
-  FO: 9,
-  BI: 9,
-  AW: 9,
-  BQ: 6,
-  DJ: 8,
-  VI: 9,
+  FO: 19,
+  BI: 19,
+  AW: 19,
+  BQ: 26,
+  DJ: 68,
+  VI: 69,
   TC: 46,
-  GI: 9,
-  PG: 3,
-  GM: 4,
+  GI: 99,
+  PG: 23,
+  GM: 24,
 };
 
 // City counts per country
@@ -470,7 +470,10 @@ const countryCodesWithData = new Set(Object.keys(countryIpData));
 const maxIps = Math.max(...Object.values(countryIpData));
 const colorScale = scaleLinear<number>()
   .domain([0, maxIps])
-  .range([0.2, 1]);
+  .range([0, 1]);
+
+// Navy blue color interpolation
+const navyBlueInterpolate = interpolate('#90caf9', '#0d47a1');
 
 // Format IP count for display
 const formatIpCount = (count: number): string => {
@@ -641,9 +644,9 @@ export default function GlobalCoverageMap() {
                       selectedCountry?.name.toLowerCase() === name.toLowerCase();
 
                     const fill = (() => {
-                      if (isSelected) return '#27ea52ff';
+                      if (isSelected) return '#1878deff';
                       if (hasData) {
-                        return interpolateGreens(colorScale(ipCount));
+                        return navyBlueInterpolate(colorScale(ipCount));
                       }
                       return '#E5E7EB';
                     })();
@@ -663,14 +666,14 @@ export default function GlobalCoverageMap() {
                             transition: 'all 0.3s ease',
                           },
                           hover: {
-                            fill: hasData ? '#7cf871ff' : '#E5E7EB',
+                            fill: hasData ? '#1f3ed7ff' : '#E5E7EB',
                             stroke: '#1F2937',
                             strokeWidth: 1,
                             outline: 'none',
                             cursor: hasData ? 'pointer' : 'default',
                           },
                           pressed: {
-                            fill: '#26dc44ff',
+                            fill: '#1f3ed7ff',
                             stroke: '#111827',
                             strokeWidth: 1,
                             outline: 'none',
@@ -696,7 +699,7 @@ export default function GlobalCoverageMap() {
                 <div className="font-semibold text-sm mb-1">
                   {hoveredCountry.name}
                 </div>
-                <div className="text-green-400 text-lg font-bold">
+                <div className="text-blue-400 text-lg font-bold">
                   {formatIpCount(hoveredCountry.ipCount)} IPs
                 </div>
                 <div className="text-xs text-gray-400 mt-1">
@@ -763,7 +766,7 @@ export default function GlobalCoverageMap() {
 
                 <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
+                    <TrendingUp className="w-4 h-4 text-blue-600" />
                     <span>99.9% uptime guaranteed</span>
                   </div>
                 </div>
@@ -784,7 +787,7 @@ export default function GlobalCoverageMap() {
           {/* Top Countries List */}
           <Card className="p-6">
             <h3 className="font-bold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-green-600" />
+              <TrendingUp className="w-5 h-5 text-blue-600" />
               Top Countries
             </h3>
             <div className="space-y-2">
@@ -794,7 +797,7 @@ export default function GlobalCoverageMap() {
                   onClick={() => handleCountrySelect(country)}
                   className="w-full flex items-center justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-xs font-bold text-green-600">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xs font-bold text-blue-600">
                       {index + 1}
                     </div>
                     {getFlagForCountry(country.iso) ? (
@@ -821,15 +824,12 @@ export default function GlobalCoverageMap() {
       {/* Bottom CTA */}
       <div className="text-center mt-8">
         <p className="text-gray-600 dark:text-gray-400">
-          Need coverage in a specific region? All our proxies come with{' '}
-          <span className="font-semibold text-green-600">
-            unlimited bandwidth
+          Need coverage in a specific region? Talk to us{' '}
+          <span className="font-semibold text-blue-600">
+          sales@ipden.io
           </span>{' '}
-          and{' '}
-          <span className="font-semibold text-green-600">
-            city-level targeting
-          </span>
-          .
+         
+          
         </p>
       </div>
     </div>

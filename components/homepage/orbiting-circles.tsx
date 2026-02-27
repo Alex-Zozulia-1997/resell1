@@ -1,17 +1,20 @@
 import OrbitingCircles from '@/components/magicui/orbiting-circles';
 import { IconProps } from '@radix-ui/react-icons/dist/types';
 import Image from 'next/image';
+import Logo from '@/components/Logo';
 
 export function OrbitingCirclesComponent() {
   return (
     <div className="relative flex h-[500px] w-full max-w-[32rem] items-center justify-center overflow-hidden rounded-lg">
-      <div className="flex items-center justify-center w-auto bg-gray-200 dark:bg-gray-800 rounded-2xl pl-4 pr-2 py-2">
-        <span className="text-6xl font-bold text-gray-100 bg-gray-900 dark:bg-white dark:text-gray-900 rounded pl-2 pr-1 tracking-widest">
-          IP
-        </span>
-        <span className="text-6xl font-bold text-gray-800 dark:text-gray-200 pl-1">
-          den
-        </span>
+      <div className="relative w-48 h-20 flex items-center justify-center">
+        <Image
+          src="/IPLogo.svg"
+          alt="IPden Logo"
+          width={192}
+          height={80}
+          className="object-contain"
+          priority
+        />
       </div>
 
       {/* Inner Circles */}

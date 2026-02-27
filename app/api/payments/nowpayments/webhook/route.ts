@@ -3,6 +3,9 @@ import crypto from 'crypto';
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { encodeEmail } from '@/lib/email-encoding';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const NOWPAYMENTS_API_URL = 'https://api.nowpayments.io/v1';
 
@@ -301,6 +304,94 @@ async function handleSuccessfulPayment(data: any, supabase: any) {
     } catch (error) {
       console.error("❌ NOWPAYMENTS SUCCESS: Failed to add traffic:", error);
       throw error;
+    }
+
+    // Send crypto purchase confirmation email
+    try {
+      await resend.emails.send({
+        from: 'IPden Crypto <crypto@ipden.io>',
+        to: customerEmail,
+        subject: `Crypto Payment Confirmed - ${trafficGB}GB Added to Your Account`,
+        html: `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
+            <div style="text-align: center; padding: 40px 20px 20px;">
+              <div style="display: inline-block; padding: 12px; background-color: #f59e0b; border-radius: 50%; margin-bottom: 20px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <h1 style="color: #1f2937; margin: 0 0 10px 0; font-size: 28px;">Crypto Payment Confirmed!</h1>
+              <p style="color: #6b7280; font-size: 16px; margin: 0;">Your cryptocurrency payment has been processed successfully</p>
+            </div>
+
+            <div style="padding: 0 20px 20px;">
+              <p style="margin-bottom: 20px;">Excellent!</p>
+              
+              <p style="margin-bottom: 20px;">
+                Your cryptocurrency payment has been confirmed and <strong>${trafficGB}GB</strong> of premium residential proxy traffic 
+                has been added to your account. Your proxies are now ready to use!
+              </p>
+
+              <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 20px; margin: 24px 0;">
+                <h3 style="margin: 0 0 12px 0; color: #92400e;">💰 Payment Summary</h3>
+                <p style="margin: 4px 0; color: #92400e; font-size: 14px;"><strong>Traffic Added:</strong> ${trafficGB}GB</p>
+                <p style="margin: 4px 0; color: #92400e; font-size: 14px;"><strong>Payment Method:</strong> Cryptocurrency</p>
+                <p style="margin: 4px 0; color: #92400e; font-size: 14px;"><strong>Status:</strong> Confirmed & Active</p>
+                <p style="margin: 4px 0; color: #92400e; font-size: 14px;"><strong>Payment ID:</strong> ${data.payment_id || 'N/A'}</p>
+              </div>
+
+              <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 20px; margin: 24px 0;">
+                <h3 style="margin: 0 0 12px 0; color: #0369a1;">🌍 Your Proxy Network Access</h3>
+                <ul style="margin: 0; padding-left: 20px; color: #0369a1;">
+                  <li style="margin-bottom: 8px;">195+ countries and regions available</li>
+                  <li style="margin-bottom: 8px;">Premium residential IP addresses</li>
+                  <li style="margin-bottom: 8px;">99.9% uptime guarantee</li>
+                  <li>24/7 technical support</li>
+                </ul>
+              </div>
+
+              <div style="text-align: center; margin: 32px 0;">
+                <a href="https://ipden.io/dashboard" style="display: inline-block; background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; margin-right: 12px;">
+                  🎯 Access Dashboard
+                </a>
+                <a href="https://ipden.io/dashboard/setup" style="display: inline-block; background-color: transparent; color: #3b82f6; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; border: 1px solid #3b82f6;">
+                  🔧 Setup Guide
+                </a>
+              </div>
+
+              <div style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 16px; margin: 24px 0;">
+                <h3 style="margin: 0 0 8px 0; color: #065f46; font-size: 16px;">🚀 Ready to Get Started?</h3>
+                <p style="margin: 0; color: #065f46; font-size: 14px;">
+                  Your proxies are active and ready. Visit your dashboard to get connection details and start using our network!
+                </p>
+              </div>
+
+              <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+                <p style="color: #9ca3af; font-size: 14px; margin: 0 0 10px 0;">
+                  Questions about your crypto payment or need help?
+                </p>
+                <p style="margin: 0 0 5px 0;">
+                  <a href="mailto:support@ipden.io" style="color: #3b82f6; text-decoration: none;">support@ipden.io</a>
+                </p>
+                <p style="margin: 0;">
+                  <a href="https://t.me/IPden_proxies" target="_blank" style="color: #3b82f6; text-decoration: none;">📱 @IPden_proxies on Telegram</a>
+                </p>
+              </div>
+
+              <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                  Thank you for choosing IPden and supporting cryptocurrency payments!
+                  <br>© 2026 IPden. All rights reserved.
+                </p>
+              </div>
+            </div>
+          </div>
+        `,
+      });
+      console.log("✅ NOWPAYMENTS SUCCESS: Crypto purchase confirmation email sent to:", customerEmail);
+    } catch (emailError) {
+      console.error("❌ NOWPAYMENTS SUCCESS: Failed to send crypto purchase confirmation email:", emailError);
+      // Don't fail the payment processing for email issues
     }
 
     // Record payment in database

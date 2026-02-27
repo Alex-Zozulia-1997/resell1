@@ -8,11 +8,13 @@ import { useUser } from '@clerk/nextjs';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { Bitcoin, CreditCard, Zap } from 'lucide-react';
+import { Bitcoin, CreditCard, Zap, Star } from 'lucide-react';
+import { BorderBeam } from '@/components/magicui/border-beam';
+import TrialOffer from './trial-offer';
 
 export default function AddTrafficComponent() {
   const { user, isSignedIn } = useUser();
-  const [trafficAmount, setTrafficAmount] = useState<number>(10);
+  const [trafficAmount, setTrafficAmount] = useState<number>(50);
   const [stripePromise, setStripePromise] = useState<Promise<any> | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +27,8 @@ export default function AddTrafficComponent() {
     if (gb <= 5) return 2.2; // $2.20/GB
     if (gb <= 50) return 1.1; // $1.10/GB
     if (gb <= 200) return 0.8; // $0.80/GB
-    return 0.7; // $0.70/GB for 500GB+
+    if (gb <= 1000) return 0.7; // $0.70/GB for 201-1000GB
+    return 0.6; // $0.60/GB for 1TB+
   };
 
   const pricePerGB = getPricePerGB(trafficAmount);
@@ -118,17 +121,21 @@ export default function AddTrafficComponent() {
     if (gb <= 5) return 'Standard Rate';
     if (gb <= 50) return '50% Discount';
     if (gb <= 200) return '64% Discount';
-    return '68% Discount';
+    if (gb <= 1000) return '68% Discount';
+    return '73% Discount';
   };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-2">Buy Custom Amount without an expiration date</h2>
+        <h2 className="text-5xl font-bold mb-2">Buy Custom Amount</h2>
         <p className="text-gray-600 dark:text-gray-400">
           Purchase additional bandwidth with flexible pricing
         </p>
       </div>
+
+      {/* Trial Offer Component */}
+      <TrialOffer />
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column - Traffic Selector */}
@@ -155,46 +162,106 @@ export default function AddTrafficComponent() {
                   value={[trafficAmount]}
                   onValueChange={(value) => setTrafficAmount(value[0])}
                   min={5}
-                  max={1000}
+                  max={2000}
                   step={1}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-2">
                   <span>5 GB</span>
-                  <span>250 GB</span>
-                  <span>500 GB</span>
-                  <span>1000 GB</span>
+                  <span>1 TB</span>
+                  <span>2 TB</span>
                 </div>
               </div>
 
               {/* Quick Select Buttons */}
-              <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                {[5, 50, 100, 200, 300, 500].map((amount) => (
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+                {[
+                  { value: 5, label: '5 GB' },
+                  { value: 50, label: '50 GB' },
+                  { value: 100, label: '100 GB' },
+                  { value: 200, label: '200 GB' },
+                  { value: 500, label: '500 GB' },
+                  { value: 1000, label: '1 TB' },
+                  { value: 1500, label: '1.5 TB' },
+                  { value: 2000, label: '2 TB' }
+                ].map((option) => (
                   <Button
-                    key={amount}
-                    variant={trafficAmount === amount ? 'default' : 'outline'}
-                    onClick={() => setTrafficAmount(amount)}
-                    className="w-full">
-                    {amount} GB
+                    key={option.value}
+                    variant={trafficAmount === option.value ? 'default' : 'outline'}
+                    onClick={() => setTrafficAmount(option.value)}
+                    className="w-full text-xs">
+                    {option.label}
                   </Button>
                 ))}
               </div>
 
               {/* Volume Discounts Info */}
-              <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
-                <CardContent className="pt-4">
-                  <div className="flex gap-3">
-                    <Zap className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold mb-1 text-sm">Volume Discounts Applied</h4>
-                      <div className="grid grid-cols-2 gap-x-4 text-xs text-gray-700 dark:text-gray-300">
-                        <div>• 5 GB: $2.20/GB</div>
-                        <div>• 6-50 GB: $1.10/GB</div>
-                        <div>• 51-200 GB: $0.80/GB</div>
-                        <div className="col-span-2">• 200+ GB: $0.70/GB</div>
-                      </div>
+              <Card className="border-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-800 dark:to-purple-800 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="flex gap-3 mb-4">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Zap className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-base bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent">
+                        Volume Discounts Applied
+                      </h4>
+                    
                     </div>
                   </div>
+                  
+                  <div className="space-y-2">
+                    {[
+                      { range: '5 GB', price: '$2.20/GB', discount: 'Standard', color: 'gray' },
+                      { range: '6-50 GB', price: '$1.10/GB', discount: '50% OFF', color: 'blue' },
+                      { range: '51-200 GB', price: '$0.80/GB', discount: '64% OFF', color: 'purple' },
+                      { range: '201-1000 GB', price: '$0.70/GB', discount: '68% OFF', color: 'indigo' },
+                      { range: '1TB+', price: '$0.60/GB', discount: '73% OFF', color: 'green', featured: true }
+                    ].map((tier, index) => (
+                      <div
+                        key={index}
+                        className={`flex items-center justify-between p-2 rounded-lg transition-all duration-200 ${
+                          tier.featured
+                            ? 'bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-300 dark:border-green-600 shadow-md'
+                            : 'bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${
+                            tier.color === 'gray' ? 'bg-gray-400' :
+                            tier.color === 'blue' ? 'bg-blue-500' :
+                            tier.color === 'purple' ? 'bg-purple-500' :
+                            tier.color === 'indigo' ? 'bg-indigo-500' :
+                            'bg-green-500'
+                          } ${tier.featured ? 'animate-pulse' : ''}`}></div>
+                          <span className={`text-sm font-medium ${
+                            tier.featured ? 'text-green-800 dark:text-green-300' : 'text-gray-700 dark:text-gray-300'
+                          }`}>
+                            {tier.range}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-sm font-bold ${
+                            tier.featured ? 'text-green-700 dark:text-green-200' : 'text-gray-800 dark:text-gray-200'
+                          }`}>
+                            {tier.price}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                            tier.featured
+                              ? 'bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-200'
+                              : tier.color === 'gray'
+                              ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                              : `bg-${tier.color}-100 text-${tier.color}-800 dark:bg-${tier.color}-800 dark:text-${tier.color}-200`
+                          }`}>
+                            {tier.discount}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Best Value Indicator */}
+                 
                 </CardContent>
               </Card>
             </CardContent>

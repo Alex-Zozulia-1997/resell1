@@ -77,7 +77,7 @@ export default function NavBar() {
             <NavigationMenu>
                 <NavigationMenuList className="max-[825px]:hidden flex gap-3 w-[100%] justify-between">
                     <Link href="/" className="pl-2 flex items-center gap-2" aria-label="Home">
-                        <Logo textSize="text-lg" roundness="rounded-md" />
+                        <Logo  roundness="rounded-md" />
                     </Link>
                 </NavigationMenuList>
                 <NavigationMenuList>

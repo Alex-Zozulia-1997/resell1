@@ -36,12 +36,27 @@ export default function PartnersPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/partners', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        toast.success('Application submitted! We will review and contact you within 2-3 business days.');
+      } else {
+        throw new Error('Failed to submit application');
+      }
+    } catch (error) {
+      console.error('Error submitting partner application:', error);
+      toast.error('Failed to submit application. Please try again or contact support.');
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-      toast.success('Application submitted! We will review and contact you within 2-3 business days.');
-    }, 1500);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -75,7 +90,7 @@ export default function PartnersPage() {
       <section className="py-16 px-4 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex justify-center mb-6">
-            <Logo textSize="text-4xl" roundness="rounded-xl" />
+            <Logo roundness="rounded-xl" />
           </div>
           <Badge className="mb-4 bg-blue-600 text-white px-4 py-2">
             Affiliate & Partner Program

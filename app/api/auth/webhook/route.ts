@@ -7,6 +7,9 @@ import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { v4 as uuidv4 } from 'uuid';
 import { encodeEmail, createEmailMapping } from '@/lib/email-encoding';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -264,7 +267,86 @@ export async function POST(req: Request) {
           console.warn('resID not found in API response - user may not have been created on Geonode');
           throw new Error('Proxy user ID not found in API response');
         }
+        // Send welcome email
+        try {
+          const firstName = eventData?.first_name || 'Valued Customer';
+          await resend.emails.send({
+            from: 'IPden Team <welcome@ipden.io>',
+            to: userEmail,
+            subject: 'Welcome to IPden - Your Proxy Account is Ready!',
+            html: `
+              <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
+                <div style="text-align: center; padding: 40px 20px 20px;">
+                  <div style="display: inline-block; padding: 12px; background-color: #3b82f6; border-radius: 50%; margin-bottom: 20px;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <h1 style="color: #1f2937; margin: 0 0 10px 0; font-size: 28px;">Welcome to IPden!</h1>
+                  <p style="color: #6b7280; font-size: 16px; margin: 0;">Your premium proxy account has been created successfully</p>
+                </div>
 
+                <div style="padding: 0 20px 20px;">
+                  <p style="margin-bottom: 20px;">Hello ${firstName},</p>
+                  
+                  <p style="margin-bottom: 20px;">
+                    Welcome to IPden! Your premium proxy account has been successfully created and configured. 
+                    You now have access to our global network of residential proxies in 195+ countries.
+                  </p>
+
+                  <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 20px; margin: 24px 0;">
+                    <h3 style="margin: 0 0 12px 0; color: #0369a1;">🚀 What's Next?</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #0369a1;">
+                      <li style="margin-bottom: 8px;">Access your dashboard to view your account details</li>
+                      <li style="margin-bottom: 8px;">Get your proxy endpoints and authentication details</li>
+                      <li style="margin-bottom: 8px;">Purchase traffic to start using our proxy network</li>
+                      <li>Check out our documentation and code examples</li>
+                    </ul>
+                  </div>
+
+                  <div style="background-color: #f8fafc; border-left: 4px solid #10b981; padding: 16px; margin: 24px 0;">
+                    <h3 style="margin: 0 0 12px 0; color: #065f46;">💡 Pro Tip: Start with Our $1 Trial</h3>
+                    <p style="margin: 0; color: #065f46; font-size: 14px;">
+                      New users can try 1GB of premium residential proxy traffic for just $1. Perfect for testing our service!
+                    </p>
+                  </div>
+
+                  <div style="text-align: center; margin: 32px 0;">
+                    <a href="https://ipden.io/dashboard" style="display: inline-block; background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; margin-right: 12px;">
+                      🎯 Access Dashboard
+                    </a>
+                    <a href="https://ipden.io/documentation" style="display: inline-block; background-color: transparent; color: #3b82f6; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; border: 1px solid #3b82f6;">
+                      📚 View Documentation
+                    </a>
+                  </div>
+
+                  <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+                    <p style="color: #9ca3af; font-size: 14px; margin: 0 0 10px 0;">
+                      Need help getting started? Contact our support team:
+                    </p>
+                    <p style="margin: 0 0 5px 0;">
+                      <a href="mailto:support@ipden.io" style="color: #3b82f6; text-decoration: none;">support@ipden.io</a>
+                    </p>
+                    <p style="margin: 0;">
+                      <a href="https://t.me/IPden_proxies" target="_blank" style="color: #3b82f6; text-decoration: none;">📱 @IPden_proxies on Telegram</a>
+                    </p>
+                  </div>
+
+                  <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                      Welcome to the IPden family! We're here to help you succeed.
+                      <br>© 2026 IPden. All rights reserved.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            `,
+          });
+          console.log('✅ Welcome email sent successfully to:', userEmail);
+        } catch (emailError) {
+          console.error('❌ Failed to send welcome email:', emailError);
+          // Don't fail the entire webhook for email issues
+        }
         return NextResponse.json({
           status: 200,
           message: 'User info inserted and resId updated',

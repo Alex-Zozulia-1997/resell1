@@ -1,26 +1,39 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface LogoProps {
-  textSize?: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'hero';
   roundness?: string;
   className?: string;
 }
 
 const Logo: React.FC<LogoProps> = ({ 
-  textSize = 'text-xl', 
+  size = 'md',
   roundness = 'rounded-lg',
   className = '' 
 }) => {
+  // Hardcoded sizes for different contexts
+  const getSizeClasses = (size: string) => {
+    const sizes = {
+      'xs': 'w-16 h-6',     // Sidebar, mobile
+      'sm': 'w-20 h-8',     // Small contexts
+      'md': 'w-28 h-11',    // Default navbar
+      'lg': 'w-36 h-14',    // Large contexts
+      'xl': 'w-48 h-19',    // Footer, large sections
+      'hero': 'w-64 h-24'   // Hero section
+    };
+    return sizes[size as keyof typeof sizes] || 'w-28 h-11';
+  };
+
   return (
-    <div
-      className={`flex items-center justify-center w-auto bg-gray-200 dark:bg-gray-800 ${roundness} pl-2 pr-1 py-1 ${className}`}>
-      <span
-        className={`${textSize} font-bold text-gray-100 bg-gray-900 dark:bg-white dark:text-gray-900 rounded pl-1 pr-[2px] tracking-widest`}>
-        IP
-      </span>
-      <span className={`${textSize} font-bold text-gray-800 dark:text-gray-200 pl-[2px]`}>
-        den
-      </span>
+    <div className={`relative ${getSizeClasses(size)} ${className}`}>
+      <Image
+        src="/IPLogo.svg"
+        alt="IPden Logo"
+        fill
+        className={`${roundness} hover:scale-105 transition-transform duration-200 object-contain`}
+        priority
+      />
     </div>
   );
 };

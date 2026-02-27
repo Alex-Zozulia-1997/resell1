@@ -28,20 +28,20 @@ export default function Home() {
         <Separator className="mb-[8rem]" />
        
         {/* <Separator className="mb-[8rem]" /> */}
-        <section id="add-traffic">
+        <section id="pricing">
           <AddTrafficComponent />
         </section>
-        <Separator className="mb-[8rem]" />
+        <Separator className="mt-16 mb-[8rem]" />
         <UseCases />
         <Separator className="mb-[8rem]" />
         <IPCheckerCTA />
         <Separator className="mb-[8rem]" />
-        <section id="pricing">
+        {/* <section id="pricing">
           <Pricing />
-        </section>
-        <Separator className="mb-[8rem]" />
+        </section> */}
+        {/* <Separator className="mb-[8rem]" />
       
-        <Separator className="mb-[8rem]" />
+        <Separator className="mb-[8rem]" /> */}
         <section id="faq">
           <div className="flex justify-center items-center w-full my-[8rem]">
             <AccordionComponent />

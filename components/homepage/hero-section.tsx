@@ -73,7 +73,7 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
       {/* Main Hero Content */}
       <div className="max-w-6xl mx-auto text-center mb-12">
         <div className="flex justify-center mb-8">
-          <Logo textSize="text-6xl lg:text-8xl" roundness="rounded-2xl" />
+          <Logo size="hero" roundness="rounded-2xl" />
         </div>
         
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 max-w-4xl mx-auto leading-tight">

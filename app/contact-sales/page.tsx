@@ -25,12 +25,40 @@ export default function ContactSales() {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/contact-sales', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      const result = await response.json();
+      
       setLoading(false);
       setSubmitted(true);
       toast.success('Thank you! We will contact you within 24 hours.');
-    }, 1500);
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        traffic: '',
+        message: '',
+      });
+
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setLoading(false);
+      toast.error('Failed to submit form. Please try again or contact us directly.');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

@@ -17,7 +17,7 @@ export default function Documentation() {
       {/* Header with Logo */}
       <div className="space-y-4 border-b pb-6">
         <div className="flex items-center gap-4">
-          <Logo textSize="text-3xl" roundness="rounded-lg" />
+          <Logo size="lg" />
           <div>
             <h1 className="text-4xl font-bold">API Documentation</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">

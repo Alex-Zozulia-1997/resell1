@@ -12,7 +12,11 @@ import { Bitcoin, CreditCard, Zap, Star } from 'lucide-react';
 import { BorderBeam } from '@/components/magicui/border-beam';
 import TrialOffer from './trial-offer';
 
-export default function AddTrafficComponent() {
+interface AddTrafficComponentProps {
+  showTrial?: boolean;
+}
+
+export default function AddTrafficComponent({ showTrial = true }: AddTrafficComponentProps) {
   const { user, isSignedIn } = useUser();
   const [trafficAmount, setTrafficAmount] = useState<number>(50);
   const [stripePromise, setStripePromise] = useState<Promise<any> | null>(null);
@@ -135,7 +139,7 @@ export default function AddTrafficComponent() {
       </div>
 
       {/* Trial Offer Component */}
-      <TrialOffer />
+      {showTrial && <TrialOffer />}
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column - Traffic Selector */}

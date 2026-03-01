@@ -109,18 +109,13 @@ export default function Footer() {
                 <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div className="flex flex-wrap gap-6 text-xs text-gray-600 dark:text-gray-400">
-                            <Link href="/terms" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
+                            <Link href="/terms-of-service" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
                                 Terms & Conditions
                             </Link>
                             <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
                                 Privacy Policy
                             </Link>
-                            <Link href="/refund-policy" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                                Refund Policy
-                            </Link>
-                            <Link href="/acceptable-use" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                                Acceptable Use
-                            </Link>
+                            
                         </div>
                         <p className="text-xs text-gray-600 dark:text-gray-400">
                             &copy; {new Date().getFullYear()} IPden. All rights reserved.

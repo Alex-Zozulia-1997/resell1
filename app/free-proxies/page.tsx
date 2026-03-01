@@ -126,7 +126,7 @@ export default function FreeProxies() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-            <Logo textSize="text-3xl" roundness="rounded-lg" />
+            <Logo size="lg" />
             <div>
               <h1 className="text-4xl font-bold">Free Proxy List</h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">

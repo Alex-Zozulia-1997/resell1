@@ -100,7 +100,7 @@ export default function NavBar() {
                     </NavigationMenuItem>
                     <NavigationMenuItem className="max-[825px]:hidden ml-5">
                         <NavigationMenuTrigger className="dark:bg-black dark:bg-opacity-50">
-                            Features
+                            Tools
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
                             <ul className="flex flex-col w-[400px] gap-3 p-4 lg:w-[500px]">

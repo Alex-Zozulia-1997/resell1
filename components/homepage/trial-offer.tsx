@@ -51,11 +51,11 @@ export default function TrialOffer() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto mb-8">
+    <div className="max-w-7xl mx-auto mb-8">
       <div className="relative">
         <Card className="border-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 shadow-2xl shadow-emerald-500/20">
           <BorderBeam size={250} duration={12} delay={9} />
-          <CardContent className="py-8 px-8">
+          <CardContent className="py-4 px-8">
             {/* Trial Badge */}
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-full shadow-lg flex items-center gap-2">
@@ -96,7 +96,7 @@ export default function TrialOffer() {
                       Try IPden Risk-Free
                     </h3>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-lg">
+                  <p className="text-gray-600 dark:text-gray-400 mb-2 text-lg">
                     Experience premium residential proxies with our exclusive trial offer
                   </p>
                   
@@ -106,25 +106,25 @@ export default function TrialOffer() {
                       <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span className="text-sm font-medium">All countries included</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span className="text-sm font-medium">24/7 premium support</span>
-                    </div>
+                    </div> */}
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span className="text-sm font-medium">14-day validity</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span className="text-sm font-medium">High-speed proxies</span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
 
               {/* Right Section - CTA */}
-              <div className="flex flex-col items-center gap-4">
-                <div className="text-center mb-2">
+              <div className="flex flex-col items-center gap-2">
+                {/* <div className="text-center mb-">
                   <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Join our satisfied customers</div>
                   <div className="flex items-center gap-1 justify-center">
                     {[...Array(5)].map((_, i) => (
@@ -132,7 +132,7 @@ export default function TrialOffer() {
                     ))}
                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-2">4.9/5</span>
                   </div>
-                </div>
+                </div> */}
                 
                 <Button
                   size="lg"

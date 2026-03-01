@@ -161,7 +161,7 @@ export function BarChartBetter({
           </div>
         )}
         {!loading && !error && chartData.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
+          <div className="flex items-center justify-center h-[300px] text-gray-500">
             No data available for the selected period
           </div>
         )}
@@ -179,7 +179,12 @@ export function BarChartBetter({
                 tickLine={false}
                 axisLine={false}
                 className="text-xs"
-                tickFormatter={(value) => `${value.toFixed(0)} MB`}
+                tickFormatter={(value) => {
+                  if (value >= 1000) {
+                    return `${(value / 1000).toFixed(1)} GB`;
+                  }
+                  return `${value.toFixed(0)} MB`;
+                }}
               />
               <Tooltip
                 content={({ active, payload }) => {

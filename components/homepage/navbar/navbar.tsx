@@ -16,12 +16,12 @@ export default function Navbar() {
           <ul className="flex items-center justify-center gap-8">
             <li>
               <Link href="#features" className="hover:text-foreground/80 text-sm">
-                Features
+                Tools
               </Link>
             </li>
             <li>
               <Link href="#features" className="hover:text-foreground/80 text-sm">
-                Features
+                Tools
               </Link>
             </li>
             <li>

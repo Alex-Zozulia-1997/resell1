@@ -9,9 +9,19 @@ import {
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import countries from 'world-countries';
-import { Copy, Download } from 'lucide-react';
+import { Copy, Download, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+
+const Tooltip = ({ children, text }: { children: React.ReactNode; text: string }) => (
+  <div className="group relative inline-block">
+    {children}
+    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+      {text}
+      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+    </div>
+  </div>
+);
 
 const countryOptions = countries.map((country) => ({
   value: country.cca2.toLowerCase(),
@@ -50,7 +60,7 @@ const generateSessionId = (length: number = 12): string => {
 };
 
 export default function EndpointBuild({ userData }: EndpointBuildProps) {
-  const [country, setCountry] = useState<any>(null);
+  const [country, setCountry] = useState<any>(countryOptions.find(c => c.value === 'us') || null);
   const [state, setState] = useState<string>('georgia');
   const [city, setCity] = useState<string>('atlanta');
   const [proxyType, setProxyType] = useState<any>(typeOptions[1]);
@@ -267,6 +277,12 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
         <CardContent>
           <div className="flex flex-wrap gap-4 mb-6">
             <div className="w-48">
+              <div className="flex items-center gap-2 mb-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Country</label>
+                <Tooltip text="Select the country where you want your proxy IP to be located. This determines which country's IP addresses you'll receive.">
+                  <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                </Tooltip>
+              </div>
               <Select
                 options={countryOptions}
                 placeholder="Select country"
@@ -313,23 +329,45 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
               />
             </div>
             
-            <input
-              type="text"
-              placeholder="State (optional)"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              className="w-48 h-[42px] px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            
-            <input
-              type="text"
-              placeholder="City (optional)"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="w-48 h-[42px] px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="w-48">
+              <div className="flex items-center gap-2 mb-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">State</label>
+                <Tooltip text="Specify a state or region within the selected country for more precise geolocation. This is optional but helps target specific regions.">
+                  <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                </Tooltip>
+              </div>
+              <input
+                type="text"
+                placeholder="State (optional)"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className="w-full h-[42px] px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             
             <div className="w-48">
+              <div className="flex items-center gap-2 mb-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">City</label>
+                <Tooltip text="Specify a city within the selected state/country for the most precise geolocation targeting. This is optional and provides city-level IP targeting.">
+                  <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                </Tooltip>
+              </div>
+              <input
+                type="text"
+                placeholder="City (optional)"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full h-[42px] px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div className="w-48">
+              <div className="flex items-center gap-2 mb-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Connection Type</label>
+                <Tooltip text="Sticky (Session) - maintains the same IP for the duration of the session. Rotating (Request) - changes IP with each request for maximum anonymity.">
+                  <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                </Tooltip>
+              </div>
               <Select
                 options={typeOptions}
                 placeholder="Select type"
@@ -374,6 +412,12 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
             </div>
             
             <div className="w-48">
+              <div className="flex items-center gap-2 mb-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Protocol</label>
+                <Tooltip text="HTTP/HTTPS - standard web protocols for most applications. SOCKS5 - more versatile protocol supporting various traffic types and applications.">
+                  <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                </Tooltip>
+              </div>
               <Select
                 options={protocolOptions}
                 placeholder="Select protocol"
@@ -418,15 +462,23 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
             </div>
             
             {proxyType.value === 'sticky' && (
-              <input
-                type="number"
-                min="1"
-                max="1440"
-                value={sessionLifetime}
-                onChange={handleLifetimeChange}
-                placeholder="Lifetime (min)"
-                className="w-48 h-[42px] px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="w-48">
+                <div className="flex items-center gap-2 mb-2">
+                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Session Lifetime</label>
+                  <Tooltip text="Duration in minutes for how long the same IP address will be maintained in sticky session mode. Range: 1-1440 minutes (24 hours).">
+                    <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                  </Tooltip>
+                </div>
+                <input
+                  type="number"
+                  min="1"
+                  max="1440"
+                  value={sessionLifetime}
+                  onChange={handleLifetimeChange}
+                  placeholder="Lifetime (min)"
+                  className="w-full h-[42px] px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
             )}
           </div>
 

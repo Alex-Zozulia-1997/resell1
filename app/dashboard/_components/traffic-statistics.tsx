@@ -315,7 +315,7 @@ export default function TrafficStatistics({ username, onDateRangeChange }: Traff
                   <div className="flex items-center gap-3">
                     <Globe className="w-8 h-8 text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Total Bandwidth</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Total Used Traffic</p>
                       <p className="text-2xl font-bold">{formatBytes(totalBandwidth)}</p>
                     </div>
                   </div>

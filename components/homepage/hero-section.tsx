@@ -1,19 +1,32 @@
 'use client';
 
-import { ArrowRight, CheckCircle2, Globe, Zap, Shield, Users } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowRight, CheckCircle2, Globe, Zap, Shield, Users, X } from 'lucide-react';
 import Link from 'next/link';
 import { BorderBeam } from '../magicui/border-beam';
 import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import Image from 'next/image';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import axios from 'axios';
 import Logo from '@/components/Logo';
+import TrialOffer from './trial-offer';
 
 export default function HeroSection() {
   const { user } = useUser();
   const router = useRouter();
+  const [showTrialPopup, setShowTrialPopup] = useState(false);
+
+  // Show trial popup after a delay when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTrialPopup(true);
+    }, 3000); // Show after 3 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleTrialCheckout = async () => {
     if (!user?.id) {
@@ -72,6 +85,7 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
       
       {/* Main Hero Content */}
       <div className="max-w-6xl mx-auto text-center mb-12">
+
         <div className="flex justify-center mb-8">
           <Logo size="hero" roundness="rounded-2xl" />
         </div>
@@ -85,7 +99,7 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
           <Link href="/dashboard">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
               Get Started 
@@ -119,6 +133,7 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
         </div>
       </div>
 
+  
       {/* Stats Bar */}
       <div className="w-full max-w-5xl mx-auto mb-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800">
@@ -140,6 +155,7 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
           </div>
         </div>
       </div>
+       
 
       {/* Dashboard Preview */}
       <div className="w-full max-w-6xl mx-auto mb-16">
@@ -155,6 +171,24 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
           <BorderBeam size={350} duration={18} delay={9} />
         </div>
       </div>
+      
+      {/* Trial Offer Popup */}
+      <Dialog open={showTrialPopup} onOpenChange={setShowTrialPopup}>
+        <DialogContent className="max-w-7xl p-0 bg-transparent border-none">
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute -top-2 -right-2 z-10 h-8 w-8 p-0 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+              onClick={() => setShowTrialPopup(false)}
+            >
+              <X className="h-6 w-6 text-red-600" />
+            </Button>
+            <TrialOffer />
+          </div>
+        </DialogContent>
+      </Dialog>
+      
     </section>
   );
 }

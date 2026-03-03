@@ -5,7 +5,6 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { UserProfile } from "../user-profile";
-import ModeToggle from "../mode-toggle";
 import { BlocksIcon } from "lucide-react";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import config from "@/config";
@@ -72,7 +71,6 @@ export default function NavBar() {
                         </div>
                     </SheetContent>
                 </Dialog>
-                <ModeToggle />
             </div>
             <NavigationMenu>
                 <NavigationMenuList className="max-[825px]:hidden flex gap-3 w-[100%] justify-between">
@@ -169,7 +167,6 @@ export default function NavBar() {
                         </Button>
                     </SignInButton>
                 )}
-                <ModeToggle />
             </div>
         </div>
     );

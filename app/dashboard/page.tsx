@@ -110,7 +110,7 @@ export default function Dashboard() {
         const resID = dbData.resID;
 
         if (!resID) {
-          setError('No Geonode user ID found');
+          setError('No Proxy user ID found');
           setLoading(false);
           return;
         }

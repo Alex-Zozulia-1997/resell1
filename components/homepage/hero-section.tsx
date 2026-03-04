@@ -38,13 +38,7 @@ export default function HeroSection() {
 
   const handleTrialCheckout = async () => {
     if (!user?.id) {
-      toast('Please login or sign up to purchase', {
-        description: 'You must be logged in to start the trial',
-        action: {
-          label: 'Sign Up',
-          onClick: () => router.push('/sign-up'),
-        },
-      });
+      router.push('/sign-in');
       return;
     }
 

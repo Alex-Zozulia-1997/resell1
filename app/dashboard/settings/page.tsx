@@ -55,41 +55,7 @@ export default function Settings() {
           </div>
         </div>
       </div>
-      <div className="p-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>System Settings</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Environment Variables Check</h3>
-              <Button onClick={checkEnvVars} disabled={loading}>
-                {loading ? 'Checking...' : 'Test Environment Variables'}
-              </Button>
-            </div>
-
-            {envCheck && (
-              <div className="mt-6">
-                <h4 className="font-semibold mb-3">Results:</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {Object.entries(envCheck).map(([key, value]) => (
-                    <div key={key} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                      {value === '✓ Set' || typeof value === 'string' && !value.includes('Missing') ? (
-                        <CheckCircle2 className="w-4 h-4 text-green-600" />
-                      ) : (
-                        <XCircle className="w-4 h-4 text-red-600" />
-                      )}
-                      <span className="text-sm">
-                        <strong>{key}:</strong> {String(value)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+     
     </div>
   )
 }

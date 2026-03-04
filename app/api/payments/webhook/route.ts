@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
   console.log("🔔 WEBHOOK: Received Stripe webhook request");
   console.log("🔔 WEBHOOK: Request URL:", req.url);
   console.log("🔔 WEBHOOK: Request method:", req.method);
+  console.log("🔔 WEBHOOK: Request headers:", Object.fromEntries(req.headers.entries()));
   
   const cookieStore = await cookies();
 

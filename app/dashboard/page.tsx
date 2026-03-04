@@ -101,8 +101,11 @@ export default function Dashboard() {
         const dbResponse = await fetch(
           `/api/user?email=${user.emailAddresses[0].emailAddress}`
         );
-        if (!dbResponse.ok)
-          throw new Error('Failed to fetch user from database');
+        if (!dbResponse.ok) {
+          setError('It takes us a few minutes after your registration to add you to our database. Please refresh this page in 1-2 minutes.');
+          setLoading(false);
+          return;
+        }
         const dbData = await dbResponse.json();
         const resID = dbData.resID;
 
@@ -186,7 +189,27 @@ export default function Dashboard() {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
+        <Card className="w-full max-w-md border-blue-200 dark:border-blue-800">
+          <CardContent className="flex flex-col items-center text-center p-8">
+            <Clock className="w-16 h-16 text-blue-600 mb-4" />
+            <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+              Setting up your account...
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+              {error}
+            </p>
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+            >
+              Refresh Page
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (

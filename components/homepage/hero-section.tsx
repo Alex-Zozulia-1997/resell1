@@ -19,13 +19,21 @@ export default function HeroSection() {
   const router = useRouter();
   const [showTrialPopup, setShowTrialPopup] = useState(false);
 
-  // Show trial popup after a delay when component mounts
+  // Show trial popup after a delay when component mounts (only once per hour)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowTrialPopup(true);
-    }, 3000); // Show after 3 seconds
+    const trialPopupTimestamp = localStorage.getItem('trialPopupTimestamp');
+    const now = Date.now();
+    const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+    
+    // Show popup if no timestamp exists or if more than 1 hour has passed
+    if (!trialPopupTimestamp || (now - parseInt(trialPopupTimestamp)) > oneHour) {
+      const timer = setTimeout(() => {
+        setShowTrialPopup(true);
+        localStorage.setItem('trialPopupTimestamp', now.toString());
+      }, 3000); // Show after 3 seconds
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const handleTrialCheckout = async () => {

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, XCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Settings() {
   let user = null;
@@ -17,6 +18,9 @@ export default function Settings() {
 
   const [envCheck, setEnvCheck] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [firstName, setFirstName] = useState(user?.user?.firstName || "");
+  const [lastName, setLastName] = useState(user?.user?.lastName || "");
+  const [updating, setUpdating] = useState(false);
 
   const checkEnvVars = async () => {
     setLoading(true);
@@ -24,11 +28,29 @@ export default function Settings() {
       const response = await fetch('/api/test-env');
       const data = await response.json();
       setEnvCheck(data.variables);
-      console.log('Environment Variables Check:', data);
+
     } catch (error) {
       console.error('Failed to check env vars:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!user?.user) return;
+    
+    setUpdating(true);
+    try {
+      await user.user.update({
+        firstName: firstName,
+        lastName: lastName,
+      });
+      toast.success('Profile updated successfully!');
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      toast.error('Failed to update profile. Please try again.');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -41,11 +63,19 @@ export default function Settings() {
         <div className='flex w-full gap-3 mt-3'>
           <div className='flex flex-col gap-3 w-full'>
             <Label>First Name</Label>
-            <Input disabled defaultValue={user?.user?.firstName ? user?.user?.firstName : ""} />
+            <Input 
+              value={firstName} 
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Enter your first name" 
+            />
           </div>
           <div className='flex flex-col gap-3 w-full'>
             <Label>Last Name</Label>
-            <Input disabled defaultValue={user?.user?.lastName ? user?.user?.lastName : ""} />
+            <Input 
+              value={lastName} 
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Enter your last name" 
+            />
           </div>
         </div>
         <div className='flex flex-col gap-3'>
@@ -53,6 +83,15 @@ export default function Settings() {
             <Label>E-mail</Label>
             <Input disabled defaultValue={user?.user?.emailAddresses?.[0]?.emailAddress!} />
           </div>
+        </div>
+        <div className="flex justify-start mt-4">
+          <Button 
+            onClick={handleUpdateProfile}
+            disabled={updating}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            {updating ? 'Updating...' : 'Save Changes'}
+          </Button>
         </div>
       </div>
      

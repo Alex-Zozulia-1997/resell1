@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { BorderBeam } from '../magicui/border-beam';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import Image from 'next/image';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
@@ -177,6 +178,9 @@ const telegramUrl = process.env.NEXT_PUBLIC_TELEGRAM_URL || '#';
       {/* Trial Offer Popup */}
       <Dialog open={showTrialPopup} onOpenChange={setShowTrialPopup}>
         <DialogContent className="max-w-7xl p-0 bg-transparent border-none">
+          <VisuallyHidden>
+            <DialogTitle>Trial Offer</DialogTitle>
+          </VisuallyHidden>
           <div className="relative">
             <Button
               variant="ghost"

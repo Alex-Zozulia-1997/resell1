@@ -64,7 +64,6 @@ export default function Dashboard() {
           
           // If cache is still valid (less than 5 minutes old)
           if (now - timestamp < CACHE_DURATION) {
-            console.log('Using cached data');
             setUserData(parsedData);
             
             // Fetch only traffic data (which changes frequently)
@@ -72,18 +71,12 @@ export default function Dashboard() {
               const trafficResponse = await fetch(`/api/geonode/user/traffic/${parsedData.resID}`);
               if (trafficResponse.ok) {
                 const trafficData = await trafficResponse.json();
-                console.log("🔍 DASHBOARD (cached): Traffic API response:", trafficData);
                 
                 const usageBandwidth = trafficData?.data?.usageBandwidth || 0;
                 const trafficLimitInBytes = trafficData?.data?.trafficLimitInBytes || 0;
                 
-                console.log("🔍 DASHBOARD (cached): Usage bandwidth:", usageBandwidth);
-                
                 const trafficInGB = usageBandwidth / (1000 * 1000 * 1000);
                 const limitInGB = trafficLimitInBytes / (1000 * 1000 * 1000);
-                
-                console.log("🔍 DASHBOARD (cached): Traffic in GB:", trafficInGB);
-                console.log("🔍 DASHBOARD (cached): Limit in GB:", limitInGB);
                 
                 setTraffic(trafficInGB);
                 setTrafficLimit(limitInGB);
@@ -96,7 +89,6 @@ export default function Dashboard() {
         }
 
         // Cache miss or expired - fetch fresh data
-        console.log('Cache miss or expired - fetching fresh data');
         
         const dbResponse = await fetch(
           `/api/user?email=${user.emailAddresses[0].emailAddress}`
@@ -133,24 +125,12 @@ export default function Dashboard() {
           throw new Error(`Request failed: ${trafficResponse.status}`);
         const trafficData = await trafficResponse.json();
         
-        console.log("🔍 DASHBOARD: Traffic API response:", trafficData);
-        
         const usageBandwidth = trafficData?.data?.usageBandwidth || 0;
         const trafficLimitInBytes = trafficData?.data?.trafficLimitInBytes || 0;
-        
-        console.log("🔍 DASHBOARD: Raw values:", {
-          usageBandwidth,
-          trafficLimitInBytes
-        });
         
         // Convert bytes to GB (using 1000*1000*1000 for GB, not GiB)
         const trafficInGB = usageBandwidth / (1000 * 1000 * 1000);
         const limitInGB = trafficLimitInBytes / (1000 * 1000 * 1000);
-        
-        console.log("🔍 DASHBOARD: Converted values:", {
-          trafficInGB,
-          limitInGB
-        });
         
         setTraffic(trafficInGB);
         setTrafficLimit(limitInGB);

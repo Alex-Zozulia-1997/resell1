@@ -80,8 +80,7 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
 
   // Log to verify env var is loaded
   useEffect(() => {
-    console.log('EndpointBuild - NEXT_PUBLIC_PROXY_HOST:', process.env.NEXT_PUBLIC_PROXY_HOST);
-    console.log('EndpointBuild - Using proxyHost:', proxyHost);
+
   }, []);
 
   // Dynamically determine port based on protocol and type
@@ -118,9 +117,7 @@ export default function EndpointBuild({ userData }: EndpointBuildProps) {
       const extractedUsername = userData?.authorization?.username || userData?.sub_user_name || userData?.username || '';
       const extractedPassword = userData?.authorization?.password || userData?.sub_user_password || userData?.password || '';
       
-      console.log('EndpointBuild - userData updated:', userData);
-      console.log('EndpointBuild - extracted username:', extractedUsername);
-      console.log('EndpointBuild - extracted password:', extractedPassword);
+
       
       setUsername(extractedUsername);
       setPassword(extractedPassword);

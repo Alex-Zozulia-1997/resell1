@@ -33,8 +33,8 @@ export function UserProfile() {
     const { user } = useUser();
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]">
-                <Avatar >
+            <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]" suppressHydrationWarning>
+                <Avatar suppressHydrationWarning>
                     <AvatarImage src={user?.imageUrl} alt="User Profile" />
                     <AvatarFallback></AvatarFallback>
                 </Avatar>

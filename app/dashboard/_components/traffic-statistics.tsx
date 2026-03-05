@@ -82,7 +82,7 @@ export default function TrafficStatistics({ username, onDateRangeChange }: Traff
       // console.log('🔍 [CLIENT] TrafficStatistics - Username:', username);
       
       if (!username) {
-        console.log('⚠️ [CLIENT] No username provided');
+
         return;
       }
 

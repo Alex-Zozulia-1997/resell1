@@ -18,15 +18,17 @@ export function GaugeChartComponent({
   used: number;
   total: number;
 }) {
-  const gaugeValue = used / total; // Example value, 65% filled
+  const gaugeValue = total > 0 ? Math.min(used / total, 1) : 0; // Prevent division by zero and cap at 100%
+  const usagePercentage = (gaugeValue * 100).toFixed(1);
+  const remainingGB = Math.max(total - used, 0).toFixed(2);
 
   return (
     <Card className="w-full h-full flex flex-col">
       <CardHeader>
         <CardTitle>
-          <div className="flex  justify-between">
-            <p>Bandwidth </p>
-            <p className="">{(total - used).toFixed(3)} GB left</p>
+          <div className="flex justify-between">
+            <p>Bandwidth Usage</p>
+            <p className="">{remainingGB} GB left</p>
           </div>
         </CardTitle>
         <CardDescription></CardDescription>
@@ -36,23 +38,23 @@ export function GaugeChartComponent({
           <GaugeChart
             className="gauge-chart"
             id="gauge-chart"
-            nrOfLevels={35}
+            nrOfLevels={50}
             percent={gaugeValue}
-            colors={['#00E676', '#FFC371', '#FF5F6D']}
-            arcWidth={0.2}
-            needleColor="#00E676"
+            colors={['#22c55e', '#eab308', '#ef4444']} // Green to yellow to red
+            arcWidth={0.25}
+            needleColor="#1f2937"
             animate
             hideText
-            arcPadding={0.03}
-            animateDuration={4000}
-            marginInPercent={0.01}
-            needleBaseColor="yellow"
+            arcPadding={0.02}
+            animateDuration={2000}
+            marginInPercent={0.02}
+            needleBaseColor="#374151"
           />
         </div>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          You have used {used.toFixed(3)} GB out of {total.toFixed(3)} GB{' '}
+          You have used {used.toFixed(2)} GB out of {total.toFixed(2)} GB{' '}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">

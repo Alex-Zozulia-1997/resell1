@@ -69,7 +69,6 @@ export function BarChartBetter({
 
       try {
         const url = `/api/geonode/statistics/per-period?dateFrom=${dateFrom}&dateTo=${dateTo}&subUserFilter=${username}`;
-        console.log('📊 [BAR CHART] Fetching:', url);
 
         const response = await fetch(url);
 
@@ -83,7 +82,6 @@ export function BarChartBetter({
         }
 
         const result = await response.json();
-        console.log('✅ [BAR CHART] Data received:', result);
         setData(result);
       } catch (err) {
         console.error('💥 [BAR CHART] Error:', err);

@@ -1,6 +1,7 @@
 "use client"
 import Link from 'next/link';
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
@@ -35,6 +36,12 @@ const products: { title: string; href: string; description: string }[] = [
 ];
 
 export default function NavBar() {
+    const [mounted, setMounted] = useState(false);
+    
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+    
     let userId = null;
     /* eslint-disable react-hooks/rules-of-hooks */
     if (config?.auth?.enabled) {
@@ -42,11 +49,22 @@ export default function NavBar() {
         userId = user?.userId;
     }
 
+    // Prevent hydration issues by only rendering interactive components after mount
+    if (!mounted) {
+        return (
+            <div className="flex min-w-full fixed justify-between p-2 border-b z-10 dark:bg-black dark:bg-opacity-50 bg-white backdrop-blur-lg h-14">
+                <div className="pl-2 flex items-center gap-2">
+                    <Logo roundness="rounded-md" />
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="flex min-w-full fixed justify-between p-2 border-b z-10 dark:bg-black dark:bg-opacity-50 bg-white backdrop-blur-lg">
+        <div className="flex min-w-full fixed justify-between p-2 border-b z-10 dark:bg-black dark:bg-opacity-50 bg-white backdrop-blur-lg" suppressHydrationWarning>
             <div className="flex justify-between w-full min-[825px]:hidden">
                 <Dialog>
-                    <SheetTrigger className="p-2 transition">
+                    <SheetTrigger className="p-2 transition" suppressHydrationWarning>
                         <Button size="icon" variant="ghost" className="w-4 h-4" aria-label="Open menu" asChild>
                             <GiHamburgerMenu />
                         </Button>
@@ -72,15 +90,15 @@ export default function NavBar() {
                     </SheetContent>
                 </Dialog>
             </div>
-            <NavigationMenu>
+            <NavigationMenu suppressHydrationWarning>
                 <NavigationMenuList className="max-[825px]:hidden flex gap-3 w-[100%] justify-between">
                     <Link href="/" className="pl-2 flex items-center gap-2" aria-label="Home">
                         <Logo  roundness="rounded-md" />
                     </Link>
                 </NavigationMenuList>
-                <NavigationMenuList>
-                    <NavigationMenuItem className="max-[825px]:hidden ml-5">
-                        <NavigationMenuTrigger className="dark:bg-black dark:bg-opacity-50">
+                <NavigationMenuList suppressHydrationWarning>
+                    <NavigationMenuItem className="max-[825px]:hidden ml-5" suppressHydrationWarning>
+                        <NavigationMenuTrigger className="dark:bg-black dark:bg-opacity-50" suppressHydrationWarning>
                             Products
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
@@ -96,8 +114,8 @@ export default function NavBar() {
                             </ul>
                         </NavigationMenuContent>
                     </NavigationMenuItem>
-                    <NavigationMenuItem className="max-[825px]:hidden ml-5">
-                        <NavigationMenuTrigger className="dark:bg-black dark:bg-opacity-50">
+                    <NavigationMenuItem className="max-[825px]:hidden ml-5" suppressHydrationWarning>
+                        <NavigationMenuTrigger className="dark:bg-black dark:bg-opacity-50" suppressHydrationWarning>
                             Tools
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>

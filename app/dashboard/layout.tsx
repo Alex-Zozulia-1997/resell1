@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   const user = await currentUser();
   const { authorized, message } = await isAuthorized(user?.id!);
   if (!authorized) {
-    console.log('authorized check fired');
+  
   }
   return (
     <div className="min-h-screen w-screen">

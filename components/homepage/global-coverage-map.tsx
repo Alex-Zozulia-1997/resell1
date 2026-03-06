@@ -526,7 +526,7 @@ export default function GlobalCoverageMap() {
   // Get top 10 countries by IP count
   const topCountries = Object.entries(countryIpData)
     .sort(([, a], [, b]) => b - a)
-    .slice(0, 10)
+    .slice(0, 5)
     .map(([iso, ipCount]) => {
       const countryName = Object.entries(countryNameToCode).find(
         ([, code]) => code === iso
